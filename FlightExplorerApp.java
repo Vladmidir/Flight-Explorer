@@ -14,6 +14,7 @@ public class FlightExplorerApp extends  Application {
     FlightExplorerView view;
 
     public static void main(String[] args) {
+
         launch(args);
     }
 
@@ -25,8 +26,8 @@ public class FlightExplorerApp extends  Application {
     @Override
     public void start(Stage primaryStage) {
         //TODO: Configure the view and display it.
-//        this.model = new FlightExplorer();
-//        this.view = new FlightExplorerView();
+        this.model = new FlightExplorer(null, null, null); //FlightExplorer NOT IMPLEMENTED #TODO
+        this.view = new FlightExplorerView(model,primaryStage);
     }
 
 }
