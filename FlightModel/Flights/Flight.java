@@ -3,6 +3,7 @@ package FlightModel.Flights;
 import FlightModel.Airports.Airport;
 import FlightModel.Airports.Location;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -44,6 +45,7 @@ public interface Flight {
      * @param direction: the new direction
      * @return void
      */
-    public void updateFlightInfo(Date date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction);
+    public void updateFlightInfo(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction);
+
 
 }

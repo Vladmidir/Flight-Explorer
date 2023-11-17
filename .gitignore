@@ -4,3 +4,4 @@ out/
 .iml
 .log
 .class
+FlightModel/config.properties

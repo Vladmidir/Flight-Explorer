@@ -3,6 +3,7 @@ package FlightModel.Flights;
 import FlightModel.Airports.Airport;
 import FlightModel.Airports.Location;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 /*
@@ -10,7 +11,7 @@ import java.util.HashMap;
  */
 public class HistoricFlight implements Flight{
 
-    private Date date;   //Date of the flight
+    private LocalDate date;   //Date of the flight
     private String status;    //Status of the flight
     private Airport depAirport;     //Departure airport
     private Airport arrAirport;     //Arrival airport
@@ -18,7 +19,7 @@ public class HistoricFlight implements Flight{
     /*
     * Constructor
      */
-    public HistoricFlight(Date date, String status, Airport depAirport, Airport arrAirport) {
+    public HistoricFlight(LocalDate date, String status, Airport depAirport, Airport arrAirport) {
         this.date = date;
         this.status = status;
         this.depAirport = depAirport;
@@ -53,7 +54,7 @@ public class HistoricFlight implements Flight{
     }
 
     @Override
-    public void updateFlightInfo(Date date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
+    public void updateFlightInfo(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
         this.date = date;
         this.status = status;
         this.depAirport = depAirport;

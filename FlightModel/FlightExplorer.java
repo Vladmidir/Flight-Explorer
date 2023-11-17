@@ -1,12 +1,19 @@
 package FlightModel;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import FlightModel.APIs.LocalData.AirportAPI;
 import FlightModel.APIs.LocalData.LocalDataFile;
 import FlightModel.APIs.WebAPIs.FlightAPIEndPoint;
 import FlightModel.Airports.Airport;
+import FlightModel.Airports.Location;
+import FlightModel.Airports.iataAirport;
 import FlightModel.Flights.Flight;
+import FlightModel.Flights.RealTimeFlight;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /*
  * This class is responsible for handling the Flight Explorer logic.
@@ -88,6 +95,59 @@ public class FlightExplorer {
     * @return ArrayList<Flight>: a list of real time flights
      */
     public ArrayList<Flight> getRealTimeFlights(HashMap<String, String> params) {
-        return null;
+        //send a request to the endpoint
+        String response = this.realTimeEndpoint.search(params);
+        //parse the json response
+        //build a list of flights
+        ArrayList<Flight> flights = new ArrayList<>();
+
+        JSONObject obj = new JSONObject(response);
+        JSONArray data = obj.getJSONArray("data");
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject flight = data.getJSONObject(i);
+            //get the flight details
+            LocalDate flightDate = LocalDate.parse(flight.getString("flight_date"));
+            String flightStatus = flight.getString("flight_status");
+            //build the airport objects
+            JSONObject depObj = flight.getJSONObject("departure");
+            JSONObject arrObj = flight.getJSONObject("arrival");
+            String depAirportIATA = depObj.getString("iata");
+            String arrAirportIATA = arrObj.getString("iata");
+            Airport depAirport = this.buildAirport(depAirportIATA);
+            Airport arrAirport = this.buildAirport(arrAirportIATA);
+            //Set up the location
+            Location location;
+            double altitude;
+            boolean isGround;
+            double direction;
+            //check if live location is available
+            //if not - set the location to departure airport location
+            if (flight.isNull("live")) {
+                try {
+                    location = depAirport.getLocation();
+                } catch (Exception e) {
+                    location = new Location(0, 0);
+                }
+                //location = depAirport.getLocation();
+                altitude = 0;
+                isGround = true;
+                direction = 0;
+            }
+            //if live location is available - set the location to the live location
+            else {
+                JSONObject live = flight.getJSONObject("live");
+                double longitude = live.getDouble("longitude");
+                double latitude = live.getDouble("latitude");
+                location = new Location(longitude, latitude);
+                altitude = live.getDouble("altitude");
+                isGround = live.getBoolean("is_ground");
+                direction = live.getDouble("direction");
+            }
+            //build the flight object
+            Flight f = new RealTimeFlight(flightDate, flightStatus, depAirport, arrAirport, location, altitude, isGround, direction);
+            //add the flight to the list
+            flights.add(f);
+        }
+        return flights;
     }
 }
