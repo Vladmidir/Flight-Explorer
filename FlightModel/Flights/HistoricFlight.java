@@ -6,7 +6,7 @@ import FlightModel.Airports.Location;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
-/*
+/**
  * This class contains information about a historic flight
  */
 public class HistoricFlight implements Flight{
@@ -16,7 +16,7 @@ public class HistoricFlight implements Flight{
     private Airport depAirport;     //Departure airport
     private Airport arrAirport;     //Arrival airport
 
-    /*
+    /**
     * Constructor
      */
     public HistoricFlight(LocalDate date, String status, Airport depAirport, Airport arrAirport) {

@@ -1,6 +1,6 @@
 package FlightModel.Airports;
 
-/*
+/**
  * This class contains information about an airport with an IATA code.
  */
 public class iataAirport implements Airport{
@@ -11,7 +11,7 @@ public class iataAirport implements Airport{
     private final String country; //Country of the airport
     //NOTE: city would be nice to have. Need to find a dataset for it.
 
-    /*
+    /**
      * Constructor
      */
     public iataAirport(String iata, String name, String country, double lat, double lon){

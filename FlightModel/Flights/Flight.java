@@ -9,30 +9,30 @@ import java.util.HashMap;
 
 public interface Flight {
 
-    /*
+    /**
      * This method returns flight Date, Status, Departure Airport and Arrival Airport
      * @return HashMap<String, String>: date, status, depAirport, arrAirport
      */
     public HashMap<String, String> getShortDetails();
 
-    /*
+    /**
      * This method returns all available details about a flight,
      * null if a detail is not available.
      * @return HashMap<String, String>: date, status, depAirport, arrAirport, location, altitude, isGround, direction
      */
     public HashMap<String, String> getLongDetails();
 
-    /*
+    /**
      * This method returns the departure airport
      */
     public Airport getDepAirport();
 
-    /*
+    /**
      * This method returns the arrival airport
      */
     public Airport getArrAirport();
 
-    /*
+    /**
      * This method updates the flight information. NOTE: May want to use a hashmap.
      * Useful for real time flights, so that we don't have to re-create the object
      * @param date: the new date

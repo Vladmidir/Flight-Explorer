@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 
-/*
+/**
 * This class is responsible for fetching data from the "flights" endpoint of the AviationStack API.
 * Does not allow "flight_date" parameter, as that would be a historic flight.
  */
@@ -19,7 +19,7 @@ public class RealTimeFlightAPI implements FlightAPIEndPoint{
 
         private final HttpClient client;
 
-        /*
+        /**
         * Constructor
         * @param APIkey - the api key for the AviationStack api
         */
@@ -55,7 +55,7 @@ public class RealTimeFlightAPI implements FlightAPIEndPoint{
         }
 
 
-        /*
+        /**
         * Sends a request to the api
         * @param params - the parameters to be added to the url
         * @return the response body from the api

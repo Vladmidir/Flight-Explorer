@@ -7,6 +7,9 @@ import java.time.LocalDate;
 //import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * This class contains information about a real time flight
+ */
 public class RealTimeFlight implements Flight{
 
     private LocalDate date;    //Date of the flight
@@ -19,7 +22,7 @@ public class RealTimeFlight implements Flight{
     private double direction;    //Live direction of the plane
 
 
-    /*
+    /**
      * Constructor
      */
     public RealTimeFlight(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {

@@ -1,6 +1,6 @@
 package FlightModel.Airports;
 
-/**
+/***
  * Location class, to hold Airport locations
  */
 public class Location {
@@ -8,7 +8,7 @@ public class Location {
     private final double lat; //once initialized, these are fixed
     private final double lon;
 
-    /**
+    /***
      * Make a Location.
      *
      * @param lat latitude
@@ -19,7 +19,7 @@ public class Location {
         this.lon = lon;
     }
 
-    /**
+    /***
      * Getter
      *
      * @return  latitude
@@ -28,7 +28,7 @@ public class Location {
         return lat;
     }
 
-    /**
+    /***
      * Getter
      *
      * @return  longitude
@@ -37,7 +37,7 @@ public class Location {
         return lon;
     }
 
-    /**
+    /***
      * Getter
      *
      * @return  array of doubles, containing longitude and longitude coordinates
@@ -46,7 +46,7 @@ public class Location {
         return new double[]{this.lat, this.lon};
     }
 
-    /*
+    /**
      * @see Object.toString()
      */
     @Override public String toString() {
@@ -55,7 +55,7 @@ public class Location {
                 + "]";
     }
 
-    /*
+    /**
      * @see Object.equals()
      */
     @Override public boolean equals(Object thatObject) {
@@ -68,7 +68,7 @@ public class Location {
                 && this.lon == that.lon;
     }
 
-    /*
+    /**
      * @see Object.hashCode()
      */
     @Override public int hashCode() {
@@ -80,7 +80,7 @@ public class Location {
     }
 
 
-    /**
+    /***
      * Tests if the given (lon, lat) coordinate is within a given radius
      *
      * @param lat latitude
