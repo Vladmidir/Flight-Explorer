@@ -3,12 +3,12 @@ package FlightModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import FlightModel.APIs.LocalData.AirportAPI;
 import FlightModel.APIs.LocalData.LocalDataFile;
 import FlightModel.APIs.WebAPIs.FlightAPIEndPoint;
 import FlightModel.Airports.Airport;
-import FlightModel.Airports.Location;
 import FlightModel.Airports.iataAirport;
 import FlightModel.Flights.Flight;
 import FlightModel.Flights.RealTimeFlight;
@@ -21,15 +21,14 @@ import org.json.JSONObject;
  */
 public class FlightExplorer {
     private ArrayList<Flight> displayedFlights;
-
     private FlightAPIEndPoint realTimeEndpoint;
     private FlightAPIEndPoint historicEndpoint;
-    private LocalDataFile airportsEndpoint;
+    private AirportAPI airportsEndpoint;
 
     /**
     * Constructor
      */
-    public FlightExplorer(FlightAPIEndPoint realTimeEndpoint, FlightAPIEndPoint historicEndpoint, LocalDataFile airportsEndpoint) {
+    public FlightExplorer(FlightAPIEndPoint realTimeEndpoint, FlightAPIEndPoint historicEndpoint, AirportAPI airportsEndpoint) {
         this.realTimeEndpoint = realTimeEndpoint;
         this.historicEndpoint = historicEndpoint;
         this.airportsEndpoint = airportsEndpoint;
@@ -41,11 +40,22 @@ public class FlightExplorer {
     * return the airport object
     */
     private Airport buildAirport(String iata) {
-        //return null;
-        return new iataAirport("iata", "name", "country", 0, 0); //FOR TESTING ONLY
+          return airportsEndpoint.getAirportByIata(iata);
     }
 
-    /***
+
+    /*
+    * get the airport details from the local data file
+    * @param iata1: the departure airport iata
+    * @param iata2: the arrival airport iata
+    * build two airport objects
+    * @return (Airport, Airport): the departure and arrival airports
+     */
+    private Airport[] getFlightAirports(String iata1, String iata2) {
+        return null;
+    }
+
+    /*
     * Build a flight object
     * @param flightType: the type of flight (historic or real time)
     * @param details: a hashmap containing the flight details. Note that "live" may be in json format.
