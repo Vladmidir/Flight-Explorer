@@ -3,12 +3,16 @@ package FlightModel.Flights;
 import FlightModel.Airports.Airport;
 import FlightModel.Airports.Location;
 
-import java.util.Date;
+import java.time.LocalDate;
+//import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * This class contains information about a real time flight
+ */
 public class RealTimeFlight implements Flight{
 
-    private Date date;    //Date of the flight
+    private LocalDate date;    //Date of the flight
     private String status;      //Status of the flight
     private Airport depAirport;     //Departure airport
     private Airport arrAirport;     //Arrival airport
@@ -18,10 +22,10 @@ public class RealTimeFlight implements Flight{
     private double direction;    //Live direction of the plane
 
 
-    /*
+    /**
      * Constructor
      */
-    public RealTimeFlight(Date date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
+    public RealTimeFlight(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
         this.date = date;
         this.status = status;
         this.depAirport = depAirport;
@@ -66,7 +70,7 @@ public class RealTimeFlight implements Flight{
     }
 
     @Override
-    public void updateFlightInfo(Date date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
+    public void updateFlightInfo(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
         this.date = date;
         this.status = status;
         this.depAirport = depAirport;
@@ -77,4 +81,8 @@ public class RealTimeFlight implements Flight{
         this.direction = direction;
     }
 
+    @Override
+    public String toString() {
+        return "Flight: " + this.depAirport.getId() + " to " + this.arrAirport.getId() + " on " + this.date.toString();
+    }
 }
