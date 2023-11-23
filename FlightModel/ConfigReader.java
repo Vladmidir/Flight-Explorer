@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/*
+/**
  * This class reads the config file and sets the values as system properties
  * This is done so that the values can be accessed from anywhere in the project
  */
 public class ConfigReader {
 
-    /*
+    /**
      * This method reads the config file and sets the values as system properties
      */
     public void getPropValues() throws IOException {

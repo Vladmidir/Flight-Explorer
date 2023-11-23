@@ -32,29 +32,26 @@ import FlightModel.FlightExplorer;
 
 
 
-
+/**
+ * Responsible for displaying the Flight Explorer UI.
+ */
 public class FlightExplorerView {
     FlightExplorer explorer;
     Stage stage;
     //add buttons
-
     GridPane grid = new GridPane();
     //possible labels
     // create vbox
-
-
     Label title;
     TextField searchBar = new TextField();
-
     HBox searchBox;
-
     Scene scene;
-
     ImageView imageView;
-
     VBox hold;
-
     VBox titleSearch;
+    /**
+     * Constructor
+     */
     public FlightExplorerView(FlightExplorer explorer, Stage stage) { // contructor for view, this is mainly javafx
         this.explorer = explorer;
         this.stage = stage;
@@ -71,7 +68,6 @@ public class FlightExplorerView {
 
     public void initUI() {
 
-
         this.searchBar.setPromptText("Search for a flight");
         this.searchBox = new HBox(this.searchBar);
         this.searchBox.setAlignment(Pos.TOP_LEFT);
@@ -84,9 +80,6 @@ public class FlightExplorerView {
 
         this.title = new Label("Flight Explorer");
         this.title.setStyle("-fx-font-size: 28;");
-
-
-
 
         this.stage.setTitle("FlightExplorer");
         this.stage.setScene(new Scene(this.grid, 1440, 1000));
@@ -102,16 +95,11 @@ public class FlightExplorerView {
         this.titleSearch.setPadding(new Insets(25));
         this.titleSearch.setSpacing(25);
 
-
 //        this.hold = new VBox(this.searchBox,this.imageView); #TODO
         this.hold = new VBox(this.titleSearch);
         this.hold.setAlignment(Pos.TOP_LEFT);
         this.hold.setSpacing(25);
         this.hold.setPadding(new Insets(25));
-
-
-
-
 
         this.scene = new Scene(hold, 1440, 1000);
         this.stage.setScene(this.scene);
@@ -122,11 +110,5 @@ public class FlightExplorerView {
 //        )));
         this.stage.show();
 
-
-
     }
-
-
-
-
 }

@@ -1,6 +1,8 @@
 package FlightModel.Airports;
 
-
+/**
+ * Contains information about an airport.
+ */
 public interface Airport {
 
     /**

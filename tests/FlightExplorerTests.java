@@ -1,6 +1,6 @@
 package tests;
 //import java test libraries
-import FlightModel.APIs.LocalData.LocalDataFile;
+import FlightModel.APIs.LocalData.AirportAPI;
 import FlightModel.APIs.WebAPIs.*;
 import FlightModel.FlightExplorer;
 import FlightModel.Flights.Flight;
@@ -27,7 +27,7 @@ public class FlightExplorerTests {
 
         FlightAPIEndPoint realTimeFlights = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
         FlightAPIEndPoint historicFlights = null;
-        LocalDataFile airports = null;
+        AirportAPI airports = new AirportAPI();
 
         flightExplorer = new FlightExplorer(realTimeFlights, historicFlights, airports);
 

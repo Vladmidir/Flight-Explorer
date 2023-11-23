@@ -2,14 +2,17 @@ package FlightModel.APIs.LocalData;
 
 import FlightModel.Airports.iataAirport;
 
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class AirportAPI implements LocalDataFile{
+/**
+ * This class contains a list of all airports with IATA codes.
+ * It is used to get Airport objects.
+ */
+public class AirportAPI {
     // get airport by iata
     // get airport by name
     // get airport by country
@@ -20,7 +23,7 @@ public class AirportAPI implements LocalDataFile{
 
     private List<iataAirport> airports;
 
-    /*
+    /**
      * load the data from the local data file into the airports list
      */
     private void loadDataFromFile(String filePath) {
@@ -29,7 +32,7 @@ public class AirportAPI implements LocalDataFile{
             // Skip the header line
             reader.readLine();
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split("\",\"");
                 if (parts.length == 7) {
                     iataAirport airport = createAirportFromCSV(parts);
                     airports.add(airport);
@@ -55,7 +58,7 @@ public class AirportAPI implements LocalDataFile{
         return new iataAirport(iata, name, country, latitude, longitude);
     }
 
-    /*
+    /**
      * Constructor for AirportAPI, creates a list of iataAirport objects that can be used to get airport information, populated from the local data file.
      */
     public AirportAPI() {
