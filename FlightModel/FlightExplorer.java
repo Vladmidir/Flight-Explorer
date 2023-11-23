@@ -2,10 +2,13 @@ package FlightModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import FlightModel.APIs.LocalData.AirportAPI;
 import FlightModel.APIs.LocalData.LocalDataFile;
 import FlightModel.APIs.WebAPIs.FlightAPIEndPoint;
 import FlightModel.Airports.Airport;
+import FlightModel.Airports.iataAirport;
 import FlightModel.Flights.Flight;
 
 /*
@@ -14,15 +17,14 @@ import FlightModel.Flights.Flight;
  */
 public class FlightExplorer {
     private ArrayList<Flight> displayedFlights;
-
     private FlightAPIEndPoint realTimeEndpoint;
     private FlightAPIEndPoint historicEndpoint;
-    private LocalDataFile airportsEndpoint;
+    private AirportAPI airportsEndpoint;
 
     /*
     * Constructor
      */
-    public FlightExplorer(FlightAPIEndPoint realTimeEndpoint, FlightAPIEndPoint historicEndpoint, LocalDataFile airportsEndpoint) {
+    public FlightExplorer(FlightAPIEndPoint realTimeEndpoint, FlightAPIEndPoint historicEndpoint, AirportAPI airportsEndpoint) {
         this.realTimeEndpoint = realTimeEndpoint;
         this.historicEndpoint = historicEndpoint;
         this.airportsEndpoint = airportsEndpoint;
@@ -34,8 +36,9 @@ public class FlightExplorer {
     * return the airport object
     */
     private Airport buildAirport(String iata) {
-        return null;
+          return airportsEndpoint.getAirportByIata(iata);
     }
+
 
     /*
     * get the airport details from the local data file

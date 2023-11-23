@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Class FlightExplorerApp.
  */
-public class FlightExplorerApp extends  Application {
+public class FlightExplorerApp extends Application {
 
     FlightExplorer model;
     FlightExplorerView view;
