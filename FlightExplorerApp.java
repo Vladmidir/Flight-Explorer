@@ -2,6 +2,9 @@ import FlightModel.FlightExplorer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import views.FlightExplorerView;
+import FlightModel.APIs.LocalData.AirportAPI;
+import FlightModel.APIs.WebAPIs.RealTimeFlightAPI;
+import FlightModel.ConfigReader;
 
 import java.io.IOException;
 
@@ -16,6 +19,7 @@ public class FlightExplorerApp extends Application {
     public static void main(String[] args) {
 
         launch(args);
+
     }
 
     /*
@@ -25,9 +29,16 @@ public class FlightExplorerApp extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        //TODO: Configure the view and display it.
-        this.model = new FlightExplorer(null, null, null); //FlightExplorer NOT IMPLEMENTED #TODO
-        this.view = new FlightExplorerView(model,primaryStage);
+        //config reader
+        ConfigReader configReader = new ConfigReader();
+        try {
+            configReader.getPropValues();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AirportAPI airportAPI = new AirportAPI();
+        this.model = new FlightExplorer(new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY")), null, airportAPI); //FlightExplorer NOT IMPLEMENTED #TODO
+        this.view = new FlightExplorerView(model, primaryStage);
     }
 
 }
