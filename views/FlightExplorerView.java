@@ -96,7 +96,7 @@ public class FlightExplorerView {
         // Load the HTML file into the WebView
         try {
             String basePath = System.getProperty("user.dir");
-            String finalPath = basePath + "/views/map.html";
+            String finalPath = basePath + "/views/html/map.html";
             File htmlFile = new File(finalPath);
             URI uri = htmlFile.toURI();
             this.webEngine.load(uri.toURL().toString());
@@ -222,17 +222,6 @@ public class FlightExplorerView {
         this.scene = new Scene(titleSearchHold, 1440, 1000);
         this.stage.setScene(this.scene);
         this.stage.show();
-        //try {
-        //    String basePath = System.getProperty("user.dir");
-        //    String finalPath = basePath + "/views/style.css";
-         //   File cssFile = new File(finalPath);
-         //   URI uri = cssFile.toURI();
-         //   this.scene.getStylesheets().add(uri.toURL().toString());
-   //     } catch (Exception e) {
-     //       e.printStackTrace();
-       // }
-
-
 
     }
 
