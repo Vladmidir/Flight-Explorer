@@ -116,8 +116,9 @@ public class FlightExplorerView {
 
         this.flightList = callAPI(); // #TODO
         this.mapFlightList = populateFlightInfo(flightList);
+        System.out.println(mapFlightList.size());
+        System.out.println(mapFlightListToString);
         initUI();
-
     }
 
     /**
@@ -211,9 +212,11 @@ public class FlightExplorerView {
             e.printStackTrace();
         }
         HashMap<String, String> responseBody = new HashMap<>();
+        responseBody.put("flight_status", "active");
+
         RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
         String search = realTimeFlightAPI.search(responseBody); // #TODO
-
+        System.out.println(search);
 
         return this.explorer.getRealTimeFlights(responseBody);
     }
