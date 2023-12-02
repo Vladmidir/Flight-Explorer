@@ -1,7 +1,9 @@
 package views;
+import FlightModel.APIs.WebAPIs.RealTimeFlightAPI;
 import FlightModel.FlightExplorer;
 import FlightModel.*;
 import FlightModel.Airports.*;
+import FlightModel.Flights.Flight;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import javafx.scene.input.KeyEvent; //you will need these!
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -96,6 +99,8 @@ public class FlightExplorerView {
 
     HBox titleSearchHold;
 
+    ArrayList<Flight> flightList;
+
     /*
      *
      */
@@ -111,6 +116,7 @@ public class FlightExplorerView {
         //add scene
         //add stage
         initUI();
+        //flightList = callAPI(); // #TODO
     }
 
     /*
@@ -152,6 +158,44 @@ public class FlightExplorerView {
         this.stage.show();
 
     }
+    private ArrayList<Flight> callAPI() {
+        ConfigReader configReader = new ConfigReader();
+        try {
+            configReader.getPropValues();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> responseBody = new HashMap<>();
+        RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
+        String search = realTimeFlightAPI.search(responseBody); // #TODO
+        System.out.println(search + "\n" );
+        System.out.println(search.length());
+        return this.explorer.getRealTimeFlights(responseBody);
+    }
+
+    private void showInfoWindow() {
+
+
+
+        // Create a new stage (window)
+        Stage infoStage = new Stage();
+        infoStage.setTitle("Info Window");
+
+        // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
+        infoStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Create a layout for the info window
+        StackPane infoLayout = new StackPane();
+        infoLayout.getChildren().add(new javafx.scene.control.Label("Sample Info"));
+
+        // Set the layout for the scene
+        Scene infoScene = new Scene(infoLayout, 200, 100);
+        infoStage.setScene(infoScene);
+
+        // Show the info window
+        infoStage.show();
+    }
+
 
     /*
      *
@@ -222,8 +266,9 @@ public class FlightExplorerView {
     private void createContentBox() {
         this.contentBox.setSpacing(15);
         for (int i = 1; i <= 400; i++) { // add labels for flight. #TODO
-            Label label = new Label("Item " + i);
-            this.contentBox.getChildren().add(label);
+            Button addFlight = new Button("<INSERT FLIGHT INFO/NAME HERE>");
+            addFlight.setOnAction(e -> showInfoWindow());
+            contentBox.getChildren().add(addFlight);
         }
     }
 
@@ -290,9 +335,9 @@ public class FlightExplorerView {
                 if (newValue == Worker.State.SUCCEEDED) {
 
 
-                    String var = "'1'";
+                    String var = "'info'"; // put flight info here.
                     this.webEngine.executeScript("const number = " + var + ";");
-                    this.webEngine.executeScript("showMessage();");
+//                this.webEngine.executeScript("showMessage();");
                 }
             });
         } catch (Exception e) {
