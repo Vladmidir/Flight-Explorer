@@ -4,6 +4,8 @@ import FlightModel.*;
 import FlightModel.Airports.*;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -38,10 +40,13 @@ import FlightModel.FlightExplorer;
 
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import views.Bridge;
 
 
 
@@ -288,13 +293,23 @@ public class FlightExplorerView {
             // Add a listener to wait for the page to finish loading
             this.webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == Worker.State.SUCCEEDED) {
-
-
                     String var = "'1'";
                     this.webEngine.executeScript("const number = " + var + ";");
                     this.webEngine.executeScript("showMessage();");
+
+                } else if (newValue == Worker.State.FAILED) {
+                    System.err.println( this.webEngine.getLoadWorker().getMessage());
+                } });
+
+            this.webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+                @Override
+                public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                    JSObject window = (JSObject) webEngine.executeScript("window");
+                    window.setMember("java", new Bridge());
+                    webEngine.executeScript("console.log = function(message) { java.log(message); }");
                 }
             });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
