@@ -64,6 +64,9 @@ public class FlightExplorer {
             String arrAirportIATA = details.get("arr_iata");
             Airport depAirport = this.buildAirport(depAirportIATA);
             Airport arrAirport = this.buildAirport(arrAirportIATA);
+            if (depAirport == null || arrAirport == null) {
+                return null;
+            }
             //Set up the location
             Location location;
             double altitude;
@@ -170,7 +173,9 @@ public class FlightExplorer {
             //build the flight object
             Flight f = buildFlight("realtime", flightDetails);
             //add the flight to the list
-            flights.add(f);
+            if (f != null){
+                flights.add(f);
+            }
         }
         return flights;
     }

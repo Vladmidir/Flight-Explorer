@@ -114,8 +114,8 @@ public class FlightExplorerView {
         this.explorer = explorer;
         this.stage = stage;
 
-//        this.flightList = callAPI(); // #TODO
-//        this.mapFlightList = populateFlightInfo(flightList);
+        this.flightList = callAPI(); // #TODO
+        this.mapFlightList = populateFlightInfo(flightList);
         initUI();
 
     }
@@ -213,8 +213,6 @@ public class FlightExplorerView {
         HashMap<String, String> responseBody = new HashMap<>();
         RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
         String search = realTimeFlightAPI.search(responseBody); // #TODO
-        System.out.println(search + "\n" );
-        System.out.println(search.length());
 
 
         return this.explorer.getRealTimeFlights(responseBody);
@@ -365,10 +363,10 @@ public class FlightExplorerView {
     private void createContentBox() {
         this.contentBox.setSpacing(15);
         for (int i = 0; i < 30; i++) { // add labels for flight. #TODO
-            Button addFlight = new Button("<INSERT FLIGHT INFO/NAME HERE>");
-//            Button addFlight = new Button(this.flightList.get(i).toString());
-//            int finalI = i;
-//            addFlight.setOnAction(e -> showInfoWindow(finalI));
+//            Button addFlight = new Button("<INSERT FLIGHT INFO/NAME HERE>");
+            Button addFlight = new Button(this.flightList.get(i).toString());
+            int finalI = i;
+            addFlight.setOnAction(e -> showInfoWindow(finalI));
             contentBox.getChildren().add(addFlight); // #TODO
         }
     }
