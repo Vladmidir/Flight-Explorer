@@ -1,7 +1,9 @@
 package views;
+import FlightModel.APIs.WebAPIs.RealTimeFlightAPI;
 import FlightModel.FlightExplorer;
 import FlightModel.*;
 import FlightModel.Airports.*;
+import FlightModel.Flights.Flight;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import javafx.scene.input.KeyEvent; //you will need these!
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -96,6 +99,14 @@ public class FlightExplorerView {
 
     HBox titleSearchHold;
 
+    ArrayList<Flight> flightList;
+
+    HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList;
+
+    String mapFlightListToString;
+
+
+
     /*
      *
      */
@@ -103,18 +114,50 @@ public class FlightExplorerView {
         this.explorer = explorer;
         this.stage = stage;
 
-        //add buttons
-        //add labels
-        //add textfield
-        //add vbox
-        //add grid
-        //add scene
-        //add stage
+        this.flightList = callAPI(); // #TODO
+        this.mapFlightList = populateFlightInfo(flightList);
         initUI();
     }
 
-    /*
+    /**
+     * converts flightList to JSON
      *
+     * @param  flightList List of all flights
+     * @return A HashMap of all flights converted
+     */
+    public HashMap<String, HashMap<String, HashMap<String, String>>> populateFlightInfo(ArrayList<Flight> flightList){
+
+        HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList = new HashMap<>();
+        for (int i = 0; i < flightList.size(); i++) {
+            HashMap<String, HashMap<String, String>> flightInfo = new HashMap<>();
+            flightInfo.put("ShortDetails",flightList.get(i).getShortDetails());
+            flightInfo.put("LongDetails",flightList.get(i).getLongDetails());
+            HashMap<String, String> flightStrInfo = new HashMap<>();
+            flightStrInfo.put("flightDetail", flightList.get(i).toString());
+            flightInfo.put("flightDetail", flightStrInfo);
+            Airport arrAirport = flightList.get(i).getArrAirport();
+            Airport depAirport = flightList.get(i).getDepAirport();
+            HashMap<String, String> arrAirportDetail = new HashMap<>();
+            arrAirportDetail.put("arrAirportDetail", arrAirport.getDetails());
+            arrAirportDetail.put("arrAirportId", arrAirport.getId());
+            arrAirportDetail.put("arrAirportLocation", arrAirport.getLocation().toString());
+            flightInfo.put("arrAirport", arrAirportDetail);
+            HashMap<String, String> depAirportDetail = new HashMap<>();
+            depAirportDetail.put("depAirportDetail", depAirport.getDetails());
+            depAirportDetail.put("depAirportId", depAirport.getId());
+            depAirportDetail.put("depAirportLocation", depAirport.getLocation().toString());
+            flightInfo.put("depAirport", depAirportDetail);
+            mapFlightList.put("" + i, flightInfo);
+
+        }
+        mapFlightListToString = mapFlightList.toString().replace("=", ":");
+        return mapFlightList;
+    }
+
+    /**
+     * Initialize UI
+     *
+     * @return void
      */
     public void initUI() {
         createMap();
@@ -153,6 +196,105 @@ public class FlightExplorerView {
 
     }
 
+    /**
+     * calls RealTimeFlightAPI search to populate flightList
+     * which can then be used to plot flights and be visualized
+     *
+     * @return An arraylist of all the flights called from the API
+     */
+    private ArrayList<Flight> callAPI() {
+        ConfigReader configReader = new ConfigReader();
+        try {
+            configReader.getPropValues();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> responseBody = new HashMap<>();
+        responseBody.put("flight_status", "active");
+
+        RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
+        String search = realTimeFlightAPI.search(responseBody); // #TODO
+
+        return this.explorer.getRealTimeFlights(responseBody);
+    }
+
+    /**
+     * UI, shows more info on a flight in the flightList
+     *
+     * @param  flightNumber to indicate which flight is being shown
+     *                      in the info window
+     * @return void
+     */
+    private void showInfoWindow(int flightNumber) {
+
+
+
+        // Create a new stage (window)
+        Stage infoStage = new Stage();
+        infoStage.setTitle("Info Window");
+
+
+        // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
+        infoStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Create a layout for the info window
+        StackPane infoLayout = new StackPane();
+        HashMap<String, String> flightInfo = this.flightList.get(flightNumber).getShortDetails();
+        flightInfo.putAll(this.flightList.get(flightNumber).getLongDetails());
+
+        String info = "";
+        for (String key : flightInfo.keySet()) {
+            if (key.equals("depAirport")){
+                info += "Departure Airport: " + flightInfo.get(key) + "\n";
+                Airport depAirport = this.flightList.get(flightNumber).getDepAirport();
+                info += "\t\tDeparture Airport Details: " + depAirport.getDetails() + "\n\t\tID: " + depAirport.getId()+ "\n\t\tLocation: " + depAirport.getLocation() + "\n";
+            }
+            else if (key.equals("arrAirport")){
+                info += "Arrival Airport: " + flightInfo.get(key) + "\n";
+                Airport arrAirport = this.flightList.get(flightNumber).getArrAirport();
+                info += "\t\tArrival Airport Details: " + arrAirport.getDetails() + "\n\t\tID: " + arrAirport.getId()+ "\n\t\tLocation: " + arrAirport.getLocation() + "\n";
+            }
+            else if (key.equals("isGround")){
+                info += "Grounded: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("location")){
+                info += "Plane Current Location: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("altitude")){
+                info += "Altitude: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("direction")){
+                info += "Direction: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("date")){
+                info += "Date: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("status")){
+                info += "Status: " + flightInfo.get(key) + "\n";
+            }
+
+        }
+
+        Label infoLabel = new javafx.scene.control.Label(info);
+        Font customFont = new Font("Arial", 24);
+        infoLabel.setFont(customFont);
+
+
+
+        infoLayout.getChildren().add(infoLabel);
+
+
+
+
+        // Set the layout for the scene
+        Scene infoScene = new Scene(infoLayout, 800, 800);
+        infoStage.setScene(infoScene);
+
+        // Show the info window
+        infoStage.show();
+    }
+
+
     /*
      *
      */
@@ -180,7 +322,6 @@ public class FlightExplorerView {
      */
     private void performSearch(TextField searchField) {
         String search = searchField.getText();
-        System.out.println(search);
         // searched term, search in database
     }
 
@@ -221,9 +362,12 @@ public class FlightExplorerView {
      */
     private void createContentBox() {
         this.contentBox.setSpacing(15);
-        for (int i = 1; i <= 400; i++) { // add labels for flight. #TODO
-            Label label = new Label("Item " + i);
-            this.contentBox.getChildren().add(label);
+        for (int i = 0; i < 30; i++) { // add labels for flight. #TODO
+//            Button addFlight = new Button("<INSERT FLIGHT INFO/NAME HERE>");
+            Button addFlight = new Button(this.flightList.get(i).toString());
+            int finalI = i;
+            addFlight.setOnAction(e -> showInfoWindow(finalI));
+            contentBox.getChildren().add(addFlight); // #TODO
         }
     }
 
@@ -258,10 +402,15 @@ public class FlightExplorerView {
      */
     private void createComboBox() {
         ObservableList<String> items = FXCollections.observableArrayList(
-                "Flight Number",
-                "Arrival",
-                "Departure",
-                "Free search"
+                "airline name",
+                "flight status",
+                "flight number",
+                "flight iata",
+                "flight icao",
+                "departure iata",
+                "arrival iata",
+                "limit",
+                "offset"
         );
         this.comboBox.setItems(items);
         this.comboBox.setValue("Select an item");
@@ -290,9 +439,9 @@ public class FlightExplorerView {
                 if (newValue == Worker.State.SUCCEEDED) {
 
 
-                    String var = "'1'";
+                    String var = "'info'"; // put flight info here.
                     this.webEngine.executeScript("const number = " + var + ";");
-                    this.webEngine.executeScript("showMessage();");
+//                this.webEngine.executeScript("showMessage();");
                 }
             });
         } catch (Exception e) {
