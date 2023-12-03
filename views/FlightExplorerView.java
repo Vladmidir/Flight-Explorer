@@ -99,12 +99,13 @@ public class FlightExplorerView {
 
     HBox titleSearchHold;
 
-    ArrayList<Flight> flightList;
+        ArrayList<Flight> flightList;
 
     HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList;
 
     String mapFlightListToString;
 
+    static HashMap<Integer, Boolean> isPinned = new HashMap<>();
 
 
     /*
@@ -116,6 +117,9 @@ public class FlightExplorerView {
 
         this.flightList = callAPI(); // #TODO
         this.mapFlightList = populateFlightInfo(flightList);
+        for (int i = 0; i < flightList.size(); i++) {
+            isPinned.put(i, false);
+        }
         initUI();
     }
 
@@ -225,11 +229,11 @@ public class FlightExplorerView {
      *                      in the info window
      * @return void
      */
-    private void showInfoWindow(int flightNumber) {
+    private void showInfoWindowPinned(int flightNumber) {
 
 
 
-        // Create a new stage (window)
+        // Create a new stage (window) // #TODO add pin button
         Stage infoStage = new Stage();
         infoStage.setTitle("Info Window");
 
@@ -275,6 +279,112 @@ public class FlightExplorerView {
 
         }
 
+        Button pinButton = new Button("Unpin this flight");
+        Label infoLabel = new javafx.scene.control.Label(info);
+        Font customFont = new Font("Arial", 24);
+        infoLabel.setFont(customFont);
+        pinButton.setStyle("-fx-font-size: 24px;");
+
+
+        infoLayout.getChildren().add(infoLabel);
+
+        VBox pinCenter = new VBox(pinButton);
+        pinCenter.setAlignment(Pos.CENTER);
+        pinButton.setOnAction(e -> {
+            isPinned.put(Integer.valueOf(flightNumber), false);
+            removeFromDashboard(flightList.get(flightNumber).toString());
+            infoStage.close();
+
+        });
+
+
+        VBox hold = new VBox(infoLabel, pinCenter);
+
+
+
+        // Set the layout for the scene
+        Scene infoScene = new Scene(hold, 1200, 800);
+        infoStage.setScene(infoScene);
+
+        // Show the info window
+        infoStage.show();
+    }
+
+    /**
+     * this removes the button from the dashboard
+     * @param  pinButton a string of the button's info
+     * @return void
+     */
+    private void removeFromDashboard (String pinButton){
+
+//        pinned.getChildren().remove(pinButton);
+        pinned.getChildren().removeIf(node -> {
+            if (node instanceof Button) {
+            Button button = (Button) node;
+            return pinButton.equals(button.getText());
+        }
+        return false;
+    });
+    }
+
+
+    /**
+     * this removes the button from the dashboard
+     * @param  flightNumber
+     * @return void
+     */
+    private void showInfoWindowUnpinned(int flightNumber) {
+
+
+
+        // Create a new stage (window) // #TODO add pin button
+        Stage infoStage = new Stage();
+        infoStage.setTitle("Info Window");
+
+
+        // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
+        infoStage.initModality(Modality.APPLICATION_MODAL);
+
+        // Create a layout for the info window
+        StackPane infoLayout = new StackPane();
+        HashMap<String, String> flightInfo = this.flightList.get(flightNumber).getShortDetails();
+        flightInfo.putAll(this.flightList.get(flightNumber).getLongDetails());
+
+        String info = "";
+        for (String key : flightInfo.keySet()) {
+            if (key.equals("depAirport")){
+                info += "Departure Airport: " + flightInfo.get(key) + "\n";
+                Airport depAirport = this.flightList.get(flightNumber).getDepAirport();
+                info += "\t\tDeparture Airport Details: " + depAirport.getDetails() + "\n\t\tID: " + depAirport.getId()+ "\n\t\tLocation: " + depAirport.getLocation() + "\n";
+            }
+            else if (key.equals("arrAirport")){
+                info += "Arrival Airport: " + flightInfo.get(key) + "\n";
+                Airport arrAirport = this.flightList.get(flightNumber).getArrAirport();
+                info += "\t\tArrival Airport Details: " + arrAirport.getDetails() + "\n\t\tID: " + arrAirport.getId()+ "\n\t\tLocation: " + arrAirport.getLocation() + "\n";
+            }
+            else if (key.equals("isGround")){
+                info += "Grounded: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("location")){
+                info += "Plane Current Location: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("altitude")){
+                info += "Altitude: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("direction")){
+                info += "Direction: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("date")){
+                info += "Date: " + flightInfo.get(key) + "\n";
+            }
+            else if (key.equals("status")){
+                info += "Status: " + flightInfo.get(key) + "\n";
+            }
+
+
+        }
+
+
         Label infoLabel = new javafx.scene.control.Label(info);
         Font customFont = new Font("Arial", 24);
         infoLabel.setFont(customFont);
@@ -282,18 +392,58 @@ public class FlightExplorerView {
 
 
         infoLayout.getChildren().add(infoLabel);
+        Button pinButton = new Button("Pin this flight");
+        pinButton.setStyle("-fx-font-size: 24px;");
+        VBox pinCenter = new VBox(pinButton);
+        pinCenter.setAlignment(Pos.CENTER);
+        pinButton.setOnAction(e -> {
+            addToDashboard(flightNumber);
+            infoStage.close();
+
+        });
+        VBox hold = new VBox(infoLabel);
+        if (!isPinned.get(flightNumber)){
+            hold.getChildren().add(pinCenter);
+        }
+        else{
+            Label aPinned = new Label("This flight is already pinned");
+            aPinned.setStyle("-fx-font-size: 24px;");
+            VBox temp = new VBox(aPinned);
+            temp.setAlignment(Pos.CENTER);
+            hold.getChildren().add(temp);
+        }
+
+
+
+
 
 
 
 
         // Set the layout for the scene
-        Scene infoScene = new Scene(infoLayout, 800, 800);
+        Scene infoScene = new Scene(hold, 1200, 800);
         infoStage.setScene(infoScene);
 
         // Show the info window
         infoStage.show();
     }
 
+    /**
+     *
+     */
+    private void addToDashboard(int flightNumber){
+        // add to dashboard
+        Button pinnedFlight = new Button(this.flightList.get(flightNumber).toString());
+
+
+        pinnedFlight.setOnAction(e -> showInfoWindowPinned(flightNumber));
+        this.pinned.getChildren().add(pinnedFlight);
+        isPinned.put(Integer.valueOf(flightNumber), true);
+
+
+
+
+    }
 
     /*
      *
@@ -362,11 +512,10 @@ public class FlightExplorerView {
      */
     private void createContentBox() {
         this.contentBox.setSpacing(15);
-        for (int i = 0; i < 30; i++) { // add labels for flight. #TODO
-//            Button addFlight = new Button("<INSERT FLIGHT INFO/NAME HERE>");
+        for (int i = 0; i < this.flightList.size(); i++) { // add labels for flight. #TODO
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
-            addFlight.setOnAction(e -> showInfoWindow(finalI));
+            addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
             contentBox.getChildren().add(addFlight); // #TODO
         }
     }
