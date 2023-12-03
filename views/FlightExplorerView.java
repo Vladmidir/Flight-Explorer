@@ -403,7 +403,9 @@ public class FlightExplorerView {
         else{
             Label aPinned = new Label("This flight is already pinned");
             aPinned.setStyle("-fx-font-size: 24px;");
-            hold.getChildren().add(aPinned);
+            VBox temp = new VBox(aPinned);
+            temp.setAlignment(Pos.CENTER);
+            hold.getChildren().add(temp);
         }
 
 
