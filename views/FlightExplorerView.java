@@ -145,9 +145,9 @@ public class FlightExplorerView {
 
             HashMap<String, String> flightLongInfo = new HashMap<>();
             flightLongInfo.put("'location'","'"+flightList.get(i).getLongDetails().get("location")+"'");
-            flightLongInfo.put("'altitude'","'"+flightList.get(i).getLongDetails().get("altitude")+"'");
+            flightLongInfo.put("'altitude'",flightList.get(i).getLongDetails().get("altitude"));
             flightLongInfo.put("'isGround'","'"+flightList.get(i).getLongDetails().get("isGround")+"'");
-            flightLongInfo.put("'direction'","'"+flightList.get(i).getLongDetails().get("direction")+"'");
+            flightLongInfo.put("'direction'",flightList.get(i).getLongDetails().get("direction"));
 
             flightInfo.put("'LongDetails'",flightLongInfo);
 
@@ -160,19 +160,17 @@ public class FlightExplorerView {
             HashMap<String, String> arrAirportDetail = new HashMap<>();
             arrAirportDetail.put("'arrAirportDetail'", "'"+arrAirport.getDetails()+"'");
             arrAirportDetail.put("'arrAirportId'", "'"+arrAirport.getId()+"'");
-            arrAirportDetail.put("'arrAirportLocation'", "'"+arrAirport.getLocation().toString()+"'");
+            arrAirportDetail.put("'arrAirportLocation'", arrAirport.getLocation().toString());
             flightInfo.put("'arrAirport'", arrAirportDetail);
             HashMap<String, String> depAirportDetail = new HashMap<>();
             depAirportDetail.put("'depAirportDetail'", "'"+depAirport.getDetails()+"'");
             depAirportDetail.put("'depAirportId'", "'"+depAirport.getId()+"'");
-            depAirportDetail.put("'depAirportLocation'", "'"+depAirport.getLocation().toString()+"'");
+            depAirportDetail.put("'depAirportLocation'", depAirport.getLocation().toString());
             flightInfo.put("'depAirport'", depAirportDetail);
             mapFlightList.put("" + i, flightInfo);
 
         }
         mapFlightListToString = mapFlightList.toString().replace("=", ":");
-
-        System.out.println(mapFlightListToString);
         return mapFlightList;
     }
 
