@@ -134,27 +134,45 @@ public class FlightExplorerView {
         HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList = new HashMap<>();
         for (int i = 0; i < flightList.size(); i++) {
             HashMap<String, HashMap<String, String>> flightInfo = new HashMap<>();
-            flightInfo.put("ShortDetails",flightList.get(i).getShortDetails());
-            flightInfo.put("LongDetails",flightList.get(i).getLongDetails());
+
+            HashMap<String, String> flightShortInfo = new HashMap<>();
+            flightShortInfo.put("'date'","'"+flightList.get(i).getShortDetails().get("date")+"'");
+            flightShortInfo.put("'status'","'"+flightList.get(i).getShortDetails().get("status")+"'");
+            flightShortInfo.put("'depAirport'","'"+flightList.get(i).getShortDetails().get("depAirport")+"'");
+            flightShortInfo.put("'arrAirport'","'"+flightList.get(i).getShortDetails().get("arrAirport")+"'");
+
+            flightInfo.put("'ShortDetails'",flightShortInfo);
+
+            HashMap<String, String> flightLongInfo = new HashMap<>();
+            flightLongInfo.put("'location'","'"+flightList.get(i).getLongDetails().get("location")+"'");
+            flightLongInfo.put("'altitude'","'"+flightList.get(i).getLongDetails().get("altitude")+"'");
+            flightLongInfo.put("'isGround'","'"+flightList.get(i).getLongDetails().get("isGround")+"'");
+            flightLongInfo.put("'direction'","'"+flightList.get(i).getLongDetails().get("direction")+"'");
+
+            flightInfo.put("'LongDetails'",flightLongInfo);
+
+
             HashMap<String, String> flightStrInfo = new HashMap<>();
-            flightStrInfo.put("flightDetail", flightList.get(i).toString());
-            flightInfo.put("flightDetail", flightStrInfo);
+            flightStrInfo.put("'flightDetail'", "'"+flightList.get(i).toString().substring(7)+"'");
+            flightInfo.put("'flightDetail'", flightStrInfo);
             Airport arrAirport = flightList.get(i).getArrAirport();
             Airport depAirport = flightList.get(i).getDepAirport();
             HashMap<String, String> arrAirportDetail = new HashMap<>();
-            arrAirportDetail.put("arrAirportDetail", arrAirport.getDetails());
-            arrAirportDetail.put("arrAirportId", arrAirport.getId());
-            arrAirportDetail.put("arrAirportLocation", arrAirport.getLocation().toString());
-            flightInfo.put("arrAirport", arrAirportDetail);
+            arrAirportDetail.put("'arrAirportDetail'", "'"+arrAirport.getDetails()+"'");
+            arrAirportDetail.put("'arrAirportId'", "'"+arrAirport.getId()+"'");
+            arrAirportDetail.put("'arrAirportLocation'", "'"+arrAirport.getLocation().toString()+"'");
+            flightInfo.put("'arrAirport'", arrAirportDetail);
             HashMap<String, String> depAirportDetail = new HashMap<>();
-            depAirportDetail.put("depAirportDetail", depAirport.getDetails());
-            depAirportDetail.put("depAirportId", depAirport.getId());
-            depAirportDetail.put("depAirportLocation", depAirport.getLocation().toString());
-            flightInfo.put("depAirport", depAirportDetail);
+            depAirportDetail.put("'depAirportDetail'", "'"+depAirport.getDetails()+"'");
+            depAirportDetail.put("'depAirportId'", "'"+depAirport.getId()+"'");
+            depAirportDetail.put("'depAirportLocation'", "'"+depAirport.getLocation().toString()+"'");
+            flightInfo.put("'depAirport'", depAirportDetail);
             mapFlightList.put("" + i, flightInfo);
 
         }
         mapFlightListToString = mapFlightList.toString().replace("=", ":");
+
+        System.out.println(mapFlightListToString);
         return mapFlightList;
     }
 
