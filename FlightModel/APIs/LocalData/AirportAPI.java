@@ -101,7 +101,8 @@ public class AirportAPI {
                 return airport;
             }
         }
-        throw new IllegalArgumentException("Airport not found");
+        return null;
+//        throw new IllegalArgumentException("Airport not found");
     }
 
     /*
