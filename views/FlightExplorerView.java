@@ -310,6 +310,11 @@ public class FlightExplorerView {
         infoStage.show();
     }
 
+    /**
+     * this removes the button from the dashboard
+     * @param  pinButton a string of the button's info
+     * @return void
+     */
     private void removeFromDashboard (String pinButton){
 
 //        pinned.getChildren().remove(pinButton);
@@ -322,12 +327,12 @@ public class FlightExplorerView {
     });
     }
 
-    private void removeFromDashboard (Button pinButton){
 
-        pinned.getChildren().remove(pinButton);
-
-    }
-
+    /**
+     * this removes the button from the dashboard
+     * @param  flightNumber
+     * @return void
+     */
     private void showInfoWindowUnpinned(int flightNumber) {
 
 
