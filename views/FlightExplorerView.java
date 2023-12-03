@@ -47,7 +47,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 
-
+/**
+ * Class FlightExplorerView.
+ * This class is responsible for the UI of the Flight Explorer.
+ */
 public class FlightExplorerView {
     FlightExplorer explorer;
     Stage stage;
@@ -99,7 +102,7 @@ public class FlightExplorerView {
 
     HBox titleSearchHold;
 
-        ArrayList<Flight> flightList;
+    ArrayList<Flight> flightList;
 
     HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList;
 
@@ -108,7 +111,7 @@ public class FlightExplorerView {
     static HashMap<Integer, Boolean> isPinned = new HashMap<>();
 
 
-    /*
+    /**
      *
      */
     public FlightExplorerView(FlightExplorer explorer, Stage stage) { // contructor for view, this is mainly javafx

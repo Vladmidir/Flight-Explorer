@@ -20,10 +20,10 @@ import org.json.JSONObject;
  * Additionally, this class is a Factory for the Flight objects.
  */
 public class FlightExplorer {
-    private ArrayList<Flight> displayedFlights;
-    private FlightAPIEndPoint realTimeEndpoint;
-    private FlightAPIEndPoint historicEndpoint;
-    private AirportAPI airportsEndpoint;
+    private ArrayList<Flight> displayedFlights; //list of the flights currently displayed on the map
+    private final FlightAPIEndPoint realTimeEndpoint; //used to get real time flights
+    private final FlightAPIEndPoint historicEndpoint; //used to get historic flights
+    private final AirportAPI airportsEndpoint; //used to get airport objects
 
     /**
     * Constructor
