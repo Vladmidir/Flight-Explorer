@@ -4,6 +4,79 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leaflet Map</title>
+  <style>
+    /* CSS */
+    .button-17 {
+      margin-top: 5px;
+      margin-right: 10px;
+      align-items: center;
+      appearance: none;
+      background-color: #fff;
+      border-radius: 8px;
+      border-style: none;
+      box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+      box-sizing: border-box;
+      color: #3c4043;
+      cursor: pointer;
+      display: inline-flex;
+      fill: currentcolor;
+      font-family: "Google Sans",Roboto,Arial,sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 48px;
+      justify-content: center;
+      letter-spacing: .25px;
+      line-height: normal;
+      max-width: 100%;
+      overflow: visible;
+      padding: 2px 24px;
+      position: relative;
+      text-align: center;
+      text-transform: none;
+      transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      width: auto;
+      will-change: transform,opacity;
+      z-index: 0;
+    }
+
+    .button-17:hover {
+      background: #F6F9FE;
+      color: #174ea6;
+    }
+
+    .button-17:active {
+      box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+      outline: none;
+    }
+
+    .button-17:focus {
+      outline: none;
+      border: 2px solid #4285f4;
+    }
+
+    .button-17:not(:disabled) {
+      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    .button-17:not(:disabled):hover {
+      box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+    }
+
+    .button-17:not(:disabled):focus {
+      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    .button-17:not(:disabled):active {
+      box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
+    }
+
+    .button-17:disabled {
+      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+  </style>
   <!-- Include Leaflet CSS and JS files -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"  crossorigin=""></script>
@@ -14,19 +87,66 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+<section id="buttons-hbox" style="border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;">
+  <h3 style = "margin-bottom: 5px; margin-top: 5px; margin-left: 5px;"> Line Thickness:</h3>
+  <button class="button-17" role="button" onclick="lineThickness('+')"  style="margin-bottom: 5px;margin-left: 5px;margin-top: 0;" >+</button>
+  <button class="button-17" role="button"  onclick="lineThickness('-')" style="margin-bottom: 5px;margin-left: 5px;margin-top: 0;margin-right: 100px;">-</button>
+  <button class="button-17" role="button"  onclick="refocus()" style="margin-bottom: 5px;margin-left: 5px;margin-top: 0; margin-right: 55%;" >Refocus</button>
+  <button class="button-17" role="button"  onclick="java.exit()" style="margin-bottom: 5px;margin-left: 5px;margin-top: 0;right: 0px;" >Exit</button>
+</section>
+
+
 <!-- Create a div with id "map" for Leaflet to render the map -->
-<div id="map" style="position: fixed; height: 100%; width: 100%;"></div>
+<div id="map" style="margin-top: 5px; position: fixed; height: 95%; width: 98%; margin-bottom: 5px;"></div>
 
 <script>
   try {
-    // Initialize the map
-    var map = L.map('map').setView([51.505, -1.09], 10);
+    var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
+            denver    = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
+            aurora    = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.'),
+            golden    = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.');
 
-    // Add a tile layer
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      minZoom: 1, maxZoom: 20,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    var cities = L.layerGroup([littleton, denver, aurora, golden]);
+
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    });
+
+    var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'});
+
+    var openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
+    });
+
+    var map = L.map('map', {
+      center: [39.73, -104.99],
+      zoom: 10,
+      layers: [osm, cities]
+    }).setView([51.505, -1.09], 10);
+    var mapLineSize = 10;
+
+    var baseMaps = {
+      "Open Street Map": osm,
+      "<span style='color: red'>Open Street Map.HOT</span>": osmHOT,
+      "<span style='color: blue'>Topographical Map</span>": openTopoMap
+    };
+
+    var overlayMaps = {
+      "Cities": cities
+    };
+
+    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    var crownHill = L.marker([39.75, -105.09]).bindPopup('This is Crown Hill Park.'),
+            rubyHill = L.marker([39.68, -105.00]).bindPopup('This is Ruby Hill Park.');
+
+    var parks = L.layerGroup([crownHill, rubyHill]);
+    layerControl.addOverlay(parks, "Parks");
+
 
     var polygon = L.polygon([
       [51.505, -1.09],
@@ -47,9 +167,23 @@
 
     }
 
-
-
-    polygon.on('click', showMessage);
+    function refocus() {
+      map.setView([51.505, -1.09], 10);
+    }
+    function lineThickness(operation) {
+      //Increase or decrease the line thickness
+      if (operation == "+") {
+        if (mapLineSize < 40) {
+          mapLineSize += 2;
+          polygon.setStyle({weight: mapLineSize});
+        }
+      } else if (operation == "-") {
+        if (mapLineSize > 2) {
+          mapLineSize -= 2;
+          polygon.setStyle({weight: mapLineSize});
+        }
+      }
+    }
 
   } catch (error) {
     // Handle the error
@@ -64,7 +198,8 @@
     var errorElement = document.createElement('div');
     errorElement.style.color = 'red';
     errorElement.innerHTML = `<strong>Error:</strong> ${message}<br>${details}`;
-    document.body.appendChild(errorElement);
+    const section = document.getElementById('buttons-hbox');
+    section.appendChild(errorElement);
   }
 
 </script>
