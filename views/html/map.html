@@ -80,7 +80,11 @@
   <!-- Include Leaflet CSS and JS files -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"  crossorigin=""></script>
-  <link rel="stylesheet" href="/views/styling/style.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="styling/style.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <section id="buttons-hbox" style="border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;">
@@ -153,11 +157,14 @@
     var marker3 = L.marker( [65.503, -20.06]).addTo(map);
 
     function showMessage() {
-      var popup = L.popup()
-              .setLatLng([51.513, -1.09])
-              .setContent("I am a standalone popup.")
-              .openOn(map);
-      marker2.bindPopup(number).openPopup(popup);
+      // var popup = L.popup()
+      //         .setLatLng([51.513, -1.09])
+      //         .setContent("I am a standalone popup.")
+      //         .openOn(map);
+      // marker2.bindPopup(number).openPopup(popup);
+      $("#text_modal").text(number);
+      $('#myModalSent').modal('show');
+
     }
 
     function refocus() {
@@ -196,6 +203,23 @@
   }
 
 </script>
+
+<div id="myModalSent" class="modal fade" data-backdrop="static" data-keyboard="false" style='top: 20%;' role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Flight Information</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="text_modal">Hey you clicked it </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

@@ -67,7 +67,7 @@ public class AirportAPI {
     }
 
 
-    /*
+    /**
      * Returns the iataAirport object with the given name.
      */
     public iataAirport getAirportByName(String name) {
@@ -79,7 +79,7 @@ public class AirportAPI {
         throw new IllegalArgumentException("Airport not found");
     }
 
-    /*
+    /**
      * Returns a list of iataAirport objects in the given country.
      */
     public List<iataAirport> getAirportsByCountry(String country) {
@@ -92,7 +92,7 @@ public class AirportAPI {
         return result;
     }
 
-    /*
+    /**
      * Returns the iataAirport object with the given iata code.
      */
     public iataAirport getAirportByIata(String iata) {
@@ -101,10 +101,11 @@ public class AirportAPI {
                 return airport;
             }
         }
-        throw new IllegalArgumentException("Airport not found");
+        return null;
+//        throw new IllegalArgumentException("Airport not found");
     }
 
-    /*
+    /**
      * Returns a list of iataAirport objects within the given radius of the given center.
      */
     public List<iataAirport> getAirportsInCircle(double centerLat, double centerLon, double radius) {
@@ -117,7 +118,7 @@ public class AirportAPI {
         return result;
     }
 
-    /*
+    /**
      * Helper method for getAirportsInCircle, returns true if the given airport is within the given radius of the given center.
      */
     private boolean inBoundary(double airportLat, double airportLon, double centerLat, double centerLon, double radius) {
