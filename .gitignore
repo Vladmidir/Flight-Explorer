@@ -4,4 +4,6 @@ out/
 .iml
 .log
 .class
+.env
+.DS_Store
 FlightModel/config.properties

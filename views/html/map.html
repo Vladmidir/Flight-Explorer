@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaflet Map</title>
+  <style>
+    /* CSS */
+    .button-17 {
+      margin-top: 5px;
+      margin-right: 10px;
+      align-items: center;
+      appearance: none;
+      background-color: #fff;
+      border-radius: 8px;
+      border-style: none;
+      box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+      box-sizing: border-box;
+      color: #3c4043;
+      cursor: pointer;
+      display: inline-flex;
+      fill: currentcolor;
+      font-family: "Google Sans",Roboto,Arial,sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 48px;
+      justify-content: center;
+      letter-spacing: .25px;
+      line-height: normal;
+      max-width: 100%;
+      overflow: visible;
+      padding: 2px 24px;
+      position: relative;
+      text-align: center;
+      text-transform: none;
+      transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      width: auto;
+      will-change: transform,opacity;
+      z-index: 0;
+    }
+
+    .button-17:hover {
+      background: #F6F9FE;
+      color: #174ea6;
+    }
+
+    .button-17:active {
+      box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+      outline: none;
+    }
+
+    .button-17:focus {
+      outline: none;
+      border: 2px solid #4285f4;
+    }
+
+    .button-17:not(:disabled) {
+      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    .button-17:not(:disabled):hover {
+      box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+    }
+
+    .button-17:not(:disabled):focus {
+      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    .button-17:not(:disabled):active {
+      box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
+    }
+
+    .button-17:disabled {
+      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+  </style>
+
+
+  <!-- Include Leaflet CSS and JS files -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"  crossorigin=""></script>
+  <link rel="stylesheet" href="styling/style.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Chroma.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.1/chroma.min.js"></script>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+  <defs>
+    <filter id="protanomaly">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.817 0.183 0 0 0
+                  0.333 0.667 0 0 0
+                  0 0.125 0.875 0 0
+                  0 0 0 1 0" />
+    </filter>
+    <filter id="protanopia">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.567 0.433 0 0 0
+                  0.558 0.442 0 0 0
+                  0 0.242 0.758 0 0
+                  0 0 0 1 0"  />
+    </filter>
+    <filter id="deuteranomaly">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.8 0.2 0 0 0
+                  0.258 0.742 0 0 0
+                  0 0.142 0.858 0 0
+                  0 0 0 1 0"  />
+    </filter>
+    <filter id="deuteranopia">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.625 0.375 0 0 0
+                  0.7 0.3 0 0 0
+                  0 0.3 0.7 0 0
+                  0 0 0 1 0" />
+    </filter>
+    <filter id="tritanomaly">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.967 0.033 0 0 0
+                  0 0.733 0.267 0 0
+                  0 0.183 0.817 0 0
+                  0 0 0 1 0"  />
+    </filter>
+    <filter id="tritanopia">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.95 0.05 0 0 0
+                  0 0.433 0.567 0 0
+                  0 0.475 0.525 0 0
+                  0 0 0 1 0"  />
+    </filter>
+    <filter id="achromatomaly">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.618 0.320 0.062 0 0
+                  0.163 0.775 0.062 0 0
+                  0.163 0.320 0.516 0 0
+                  0 0 0 1 0"  />
+    </filter>
+    <filter id="achromatopsia">
+      <feColorMatrix in="SourceGraphic"
+                     type="matrix"
+                     values="0.299 0.587 0.114 0 0
+                  0.299 0.587 0.114 0 0
+                  0.299 0.587 0.114 0 0
+                  0 0 0 1 0"  />
+    </filter>
+  </defs>
+</svg>
+
+<section id="buttons-hbox" style="position:relative;border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;">
+    <h5 style = "margin-bottom: 5px; margin-top: 5px; margin-left: 5px;"> Line Thickness:</h5>
+    <button class="button-17" role="button" onclick="lineThickness('+')"  style="margin-bottom: 5px;margin-left: 5px;margin-top: 0;border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;" >+</button>
+    <button class="button-17" role="button"  onclick="lineThickness('-')" style="margin-bottom: 5px;margin-left: 5px;margin-top: 0;margin-right: 100px;border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;">-</button>
+  <button class="button-17" role="button"  onclick="refocus()" style="margin-bottom: 5px;margin-left: 5px;margin-top: 0; margin-right: 20%;border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;" >Refocus</button>
+
+  <select id="filterDropdown" style="border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px; margin-right: 230px" >
+    <!-- Options for different colorblind filters -->
+    <option value="none">Normal Vision</option>
+    <option value="protanomaly">Protanomaly</option>
+    <option value="protanopia">Protanopia</option>
+    <option value="deuteranomaly">Deuteranomaly</option>
+    <option value="deuteranopia">Deuteranopia</option>
+    <option value="tritanomaly">Tritanomaly</option>
+    <option value="tritanopia">Tritanopia</option>
+    <option value="achromatomaly">Achromatomaly</option>
+    <option value="achromatopsia">Achromatopsia</option>
+  </select>
+
+  <button class="button-17" role="button"  onclick="java.exit()" style="margin-bottom: 5px;margin-left: 5px;margin-top: 0;right: 0px;border-spacing: 20px;border: 1px solid rgb(86, 86, 86);font-family:'Google Sans', Roboto, Arial, sans-serif; border-radius: 5px;"" >Exit</button>
+</section>
+
+
+
+<!-- Create a div with id "map" for Leaflet to render the map -->
+<div id="map" style="margin-top: 5px; position: fixed; height: 95%; width: 98%; margin-bottom: 5px;"></div>
+
+
+<script>
+  try {
+
+
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    });
+
+    var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'});
+
+    var openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
+    });
+
+    var map = L.map('map', {
+      center: [39.73, -104.99],
+      zoom: 10,
+      layers: [osm] //cities]
+    }).setView([51.505, -1.09], 10);
+    var mapLineSize = 10;
+
+    var baseMaps = {
+      "Open Street Map": osm,
+      "<span style='color: red'>Open Street Map.HOT</span>": osmHOT,
+      "<span style='color: blue'>Topographical Map</span>": openTopoMap
+    };
+
+    //var overlayMaps = {
+    //  "Cities": cities
+    //};
+
+    var layerControl = L.control.layers(baseMaps).addTo(map); //overlayMaps).addTo(map);
+
+   // var crownHill = L.marker([39.75, -105.09]).bindPopup('This is Crown Hill Park.'),
+     //       rubyHill = L.marker([39.68, -105.00]).bindPopup('This is Ruby Hill Park.');
+
+    //var parks = L.layerGroup([crownHill, rubyHill]);
+    //layerControl.addOverlay(parks, "Parks");
+
+    var myLayerGroup = L.layerGroup().addTo(map);
+
+    var flightList = {};
+    function createFlights(dict) {
+      flightList = {};
+      myLayerGroup.clearLayers();
+
+      for (var key in dict) {
+
+        flightList[key] = [];
+
+        var marker1 = L.marker(dict[key]["arrAirportLocation"]).addTo(myLayerGroup);
+        var marker2 = L.marker(dict[key]["depAirportLocation"]).addTo(myLayerGroup);
+
+        var popup1 = L.popup()
+                .setLatLng(dict[key]["arrAirportLocation"])
+                .setContent(dict[key]["arrAirportDetail"])
+                .openOn(myLayerGroup);
+
+        var popup2 = L.popup()
+                .setLatLng(dict[key]["depAirportLocation"])
+                .setContent(dict[key]["depAirportDetail"])
+                .openOn(myLayerGroup);
+
+        marker1.bindPopup(dict[key]["arrAirportDetail"]).openPopup();
+        marker2.bindPopup(dict[key]["depAirportDetail"]).openPopup();
+
+        var polyline = L.polygon([
+          dict[key]["arrAirportLocation"],
+          dict[key]["depAirportLocation"],
+        ], {color: 'blue', weight: 10}).addTo(myLayerGroup);
+
+        polyline.on('click', onPolyClick);
+
+        var arrdetails = dict[key]["ShortDetails"];
+        arrdetails["depAirportDetail"] = dict[key]["depAirportDetail"];
+
+        flightList[key].push(marker1);//0
+        flightList[key].push(marker2);//1
+        flightList[key].push(popup1);//2
+        flightList[key].push(popup2);//3
+        flightList[key].push(polyline);//4
+        flightList[key].push(10);//5
+        flightList[key].push(arrdetails);//6
+        flightList[key].push(dict[key]["flightDetail"]);//7
+
+      }
+
+    }
+
+    function onPolyClick(e) {
+      for (var key in flightList) {
+        if (flightList[key][4] === e.target) {
+          $('#myModalSent').modal('show');
+          $('#modal-title').text(flightList[key][7]);
+          var dict = flightList[key][6];
+
+          for (const key in dict) {
+            if (key === "arrAirport") {
+              $('#arrAirport').text("Arrival Airport: " + dict[key]);
+            } else if (key === "status") {
+              $('#status').text(key+ ": " + dict[key]);
+            } else if (key === "depAirport") {
+              $('#depAirport').text("Departure Airport: " + dict[key]);
+            } else if (key === "date") {
+              $('#date').text("Date: " + dict[key]);
+            }
+          }
+          break;
+        }
+      }
+    }
+
+
+    function refocus() {
+      map.setView([31, 45], 2);
+    }
+    function lineThickness(operation) {
+      //Increase or decrease the line thickness
+      for (var key in flightList) {
+        if (operation === "+") {
+          if (flightList[key][5] < 40) {
+            flightList[key][5] += 2;
+            flightList[key][4].setStyle({weight: flightList[key][5] });
+          }
+        } else if (operation === "-") {
+          if (flightList[key][5] > 2) {
+            flightList[key][5] -= 2;
+            flightList[key][4].setStyle({weight: flightList[key][5] });
+          }
+        }
+      }
+    }
+
+
+    // Function to apply colorblind filter to the map
+    function applyColorblindFilter(filterName) {
+      setTimeout(() => {
+        const filterValue = filterName === "none" ? "" : `url(#${filterName})`;
+        //select map
+        const map = document.querySelector("#map");
+        // Update the filter
+        map.style.filter = filterValue;
+      }, 50); // Delay of 50ms
+    }
+
+    // Event listener for the dropdown
+    document.getElementById('filterDropdown').addEventListener('change', function() {
+      const selectedFilter = this.value;
+      applyColorblindFilter(selectedFilter);
+    });
+
+
+  } catch (error) {
+    // Handle the error
+    displayError('An error occurred:', error.message);
+  }
+
+  function displayError(message, details) {
+    // Display the error message to the user
+    console.error(message, details);
+
+    // You can choose to show the error message in the HTML or use other UI elements
+    var errorElement = document.createElement('div');
+    errorElement.style.color = 'red';
+    errorElement.innerHTML = `<strong>Error:</strong> ${message}<br>${details}`;
+    const section = document.getElementById('buttons-hbox');
+    section.appendChild(errorElement);
+  }
+
+</script>
+
+<div id="myModalSent" class="modal fade" data-backdrop="static" data-keyboard="false" style='top: 20%;' role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4  id="modal-title" class="modal-title">Flight Information</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="arrAirport"></p>
+        <p id="status"></p>
+        <p id="depAirport"></p>
+        <p id="date"></p>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -132,4 +132,12 @@ public class AirportAPITests {
         System.out.println("Actual result: " + foundAirports.size() + " airports, contains LHR: " +
                 (heathrow != null && foundAirports.contains(heathrow)));
     }
+
+    @Test
+    public void testGetIataFromCity_Valid() {
+        ArrayList<String> iata = airportAPI.getIataFromCity("New York");
+        assertNotNull("Airport should be found", iata);
+        assertTrue(iata.contains("JFK"));
+        assertNotNull(airportAPI.getIataFromCity("Toronto"));
+    }
 }
