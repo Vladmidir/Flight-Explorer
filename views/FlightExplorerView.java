@@ -319,11 +319,11 @@ public class FlightExplorerView {
      * @param  flightNumber
      * @return void
      */
-    private void showInfoWindowUnpinned(int flightNumber) {
+    private void showInfoWindowUnpinned(int flightNumber, ArrayList<Flight> flightList) {
 
 
 
-        // Create a new stage (window) // #TODO add pin button
+
         Stage infoStage = new Stage();
         infoStage.setTitle("Info Window");
 
@@ -333,19 +333,19 @@ public class FlightExplorerView {
 
         // Create a layout for the info window
         StackPane infoLayout = new StackPane();
-        HashMap<String, String> flightInfo = this.flightList.get(flightNumber).getShortDetails();
-        flightInfo.putAll(this.flightList.get(flightNumber).getLongDetails());
+        HashMap<String, String> flightInfo = flightList.get(flightNumber).getShortDetails();
+        flightInfo.putAll(flightList.get(flightNumber).getLongDetails());
 
         String info = "";
         for (String key : flightInfo.keySet()) {
             if (key.equals("depAirport")){
                 info += "Departure Airport: " + flightInfo.get(key) + "\n";
-                Airport depAirport = this.flightList.get(flightNumber).getDepAirport();
+                Airport depAirport = flightList.get(flightNumber).getDepAirport();
                 info += "\t\tDeparture Airport Details: " + depAirport.getDetails() + "\n\t\tID: " + depAirport.getId()+ "\n\t\tLocation: " + depAirport.getLocation() + "\n";
             }
             else if (key.equals("arrAirport")){
                 info += "Arrival Airport: " + flightInfo.get(key) + "\n";
-                Airport arrAirport = this.flightList.get(flightNumber).getArrAirport();
+                Airport arrAirport = flightList.get(flightNumber).getArrAirport();
                 info += "\t\tArrival Airport Details: " + arrAirport.getDetails() + "\n\t\tID: " + arrAirport.getId()+ "\n\t\tLocation: " + arrAirport.getLocation() + "\n";
             }
             else if (key.equals("isGround")){
@@ -481,7 +481,7 @@ public class FlightExplorerView {
             for (int i = 0; i < this.flightList.size(); i++) {
                 Button addFlight = new Button(this.flightList.get(i).toString());
                 int finalI = i;
-                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, this.flightList));
                 this.contentBox.getChildren().add(addFlight);
             }
 
@@ -518,7 +518,7 @@ public class FlightExplorerView {
             for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
                 Button addFlight = new Button(searchResult.get(i).toString());
                 int finalI = i;
-                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, searchResult));
                 this.contentBox.getChildren().add(addFlight); // #TODO
             }
 
@@ -592,7 +592,7 @@ public class FlightExplorerView {
         for (int i = 0; i < this.flightList.size(); i++) { // add labels for flight. #TODO
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
-            addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+            addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, this.flightList));
             this.contentBox.getChildren().add(addFlight); // #TODO
         }
     }
