@@ -178,8 +178,8 @@
 
         polyline.on('click', onPolyClick);
 
-        var arrdetails = transferData(dict[key]["ShortDetails"]);
-        var depdetails = dict[key]["depAirportDetail"];
+        var arrdetails = dict[key]["ShortDetails"];
+        arrdetails["depAirportDetail"] = dict[key]["depAirportDetail"];
 
         flightList[key].push(marker1);//0
         flightList[key].push(marker2);//1
@@ -188,8 +188,7 @@
         flightList[key].push(polyline);//4
         flightList[key].push(10);//5
         flightList[key].push(arrdetails);//6
-        flightList[key].push(depdetails);//7
-        flightList[key].push(dict[key]["flightDetail"]);//8
+        flightList[key].push(dict[key]["flightDetail"]);//7
 
       }
 
@@ -199,8 +198,20 @@
       for (var key in flightList) {
         if (flightList[key][4] === e.target) {
           $('#myModalSent').modal('show');
-          $('#modal-title').text(flightList[key][8]);
-          $('#text-modal').text(flightList[key][6] + flightList[key][7]);
+          $('#modal-title').text(flightList[key][7]);
+          var dict = flightList[key][6];
+
+          for (const key in dict) {
+            if (key === "arrAirport") {
+              $('#arrAirport').text("Arrival Airport: " + dict[key]);
+            } else if (key === "status") {
+              $('#status').text(key+ ": " + dict[key]);
+            } else if (key === "depAirport") {
+              $('#depAirport').text("Departure Airport: " + dict[key]);
+            } else if (key === "date") {
+              $('#date').text("Date: " + dict[key]);
+            }
+          }
           break;
         }
       }
@@ -227,14 +238,6 @@
       }
     }
 
-    function transferData(dict) {
-      var finalString = "";
-      for(var detail in dict) {
-        finalString = finalString + detail + ": " + dict[detail] + '\n';
-      }
-      return finalString;
-    }
-
   } catch (error) {
     // Handle the error
     displayError('An error occurred:', error.message);
@@ -258,11 +261,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Flight Information</h4>
+        <h4  id="modal-title" class="modal-title">Flight Information</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p id="text_modal">Hey you clicked it </p>
+        <p id="arrAirport"></p>
+        <p id="status"></p>
+        <p id="depAirport"></p>
+        <p id="date"></p>
+
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
