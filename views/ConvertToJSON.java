@@ -73,6 +73,9 @@ public class ConvertToJSON {
         }
         temp = temp.substring(0, temp.length() - 1);
         temp += "}";
+        if (temp.equals("}")) {
+            temp = "{}";
+        }
         this.flightListJSON = temp;
 
     }
