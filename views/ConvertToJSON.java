@@ -57,7 +57,7 @@ public class ConvertToJSON {
             temp += "\"arrAirportDetail\":";
             temp += "\""+arrAirport.getDetails()+"\",";
             temp += "\"arrAirportLocation\":"+arrAirport.getLocation().toString()+",";
-            temp += "\"ShortDetails\":{" + "\"arrAirport\":\""+flightList.get(i).getShortDetails().get("depAirport")+"\",";
+            temp += "\"ShortDetails\":{" + "\"arrAirport\":\""+flightList.get(i).getShortDetails().get("arrAirport")+"\",";
             temp += "\"status\":\""+flightList.get(i).getShortDetails().get("status")+"\",";
             temp += "\"depAirport\":\""+flightList.get(i).getShortDetails().get("depAirport")+"\",";
             temp += "\"date\":\""+flightList.get(i).getShortDetails().get("date")+"\"},";
