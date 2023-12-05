@@ -45,6 +45,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
+import javax.swing.text.Style;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -109,22 +111,20 @@ public class FlightExplorerView {
 
     ArrayList<Flight> flightList;
 
-    HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList;
-
     String mapFlightListToString;
 
     static HashMap<Integer, Boolean> isPinned = new HashMap<>();
 
 
     /**
-     *
+     * constructor for view, this is mainly javafx
      */
     public FlightExplorerView(FlightExplorer explorer, Stage stage) { // contructor for view, this is mainly javafx
         this.explorer = explorer;
         this.stage = stage;
 
         this.flightList = callAPI(); // #TODO
-        this.mapFlightList = populateFlightInfo(flightList);
+        this.mapFlightListToString = populateFlightInfo(flightList);
         for (int i = 0; i < flightList.size(); i++) {
             isPinned.put(i, false);
         }
@@ -137,49 +137,9 @@ public class FlightExplorerView {
      * @param  flightList List of all flights
      * @return A HashMap of all flights converted
      */
-    public HashMap<String, HashMap<String, HashMap<String, String>>> populateFlightInfo(ArrayList<Flight> flightList){
-
-        HashMap<String, HashMap<String, HashMap<String, String>>> mapFlightList = new HashMap<>();
-        for (int i = 0; i < flightList.size(); i++) {
-            HashMap<String, HashMap<String, String>> flightInfo = new HashMap<>();
-
-            HashMap<String, String> flightShortInfo = new HashMap<>();
-            flightShortInfo.put("'date'","'"+flightList.get(i).getShortDetails().get("date")+"'");
-            flightShortInfo.put("'status'","'"+flightList.get(i).getShortDetails().get("status")+"'");
-            flightShortInfo.put("'depAirport'","'"+flightList.get(i).getShortDetails().get("depAirport")+"'");
-            flightShortInfo.put("'arrAirport'","'"+flightList.get(i).getShortDetails().get("arrAirport")+"'");
-
-            flightInfo.put("'ShortDetails'",flightShortInfo);
-
-            HashMap<String, String> flightLongInfo = new HashMap<>();
-            flightLongInfo.put("'location'","'"+flightList.get(i).getLongDetails().get("location")+"'");
-            flightLongInfo.put("'altitude'",flightList.get(i).getLongDetails().get("altitude"));
-            flightLongInfo.put("'isGround'","'"+flightList.get(i).getLongDetails().get("isGround")+"'");
-            flightLongInfo.put("'direction'",flightList.get(i).getLongDetails().get("direction"));
-
-            flightInfo.put("'LongDetails'",flightLongInfo);
-
-
-            HashMap<String, String> flightStrInfo = new HashMap<>();
-            flightStrInfo.put("'flightDetail'", "'"+flightList.get(i).toString().substring(7)+"'");
-            flightInfo.put("'flightDetail'", flightStrInfo);
-            Airport arrAirport = flightList.get(i).getArrAirport();
-            Airport depAirport = flightList.get(i).getDepAirport();
-            HashMap<String, String> arrAirportDetail = new HashMap<>();
-            arrAirportDetail.put("'arrAirportDetail'", "'"+arrAirport.getDetails()+"'");
-            arrAirportDetail.put("'arrAirportId'", "'"+arrAirport.getId()+"'");
-            arrAirportDetail.put("'arrAirportLocation'", arrAirport.getLocation().toString());
-            flightInfo.put("'arrAirport'", arrAirportDetail);
-            HashMap<String, String> depAirportDetail = new HashMap<>();
-            depAirportDetail.put("'depAirportDetail'", "'"+depAirport.getDetails()+"'");
-            depAirportDetail.put("'depAirportId'", "'"+depAirport.getId()+"'");
-            depAirportDetail.put("'depAirportLocation'", depAirport.getLocation().toString());
-            flightInfo.put("'depAirport'", depAirportDetail);
-            mapFlightList.put("" + i, flightInfo);
-
-        }
-        mapFlightListToString = mapFlightList.toString().replace("=", ":");
-        return mapFlightList;
+    public String populateFlightInfo(ArrayList<Flight> flightList){
+        ConvertToJSON convertToJSON = new ConvertToJSON(flightList);
+        return convertToJSON.getFlightListJSON();
     }
 
     /**
@@ -257,7 +217,7 @@ public class FlightExplorerView {
 
 
 
-        // Create a new stage (window) // #TODO add pin button
+        // Create a new stage (window)
         Stage infoStage = new Stage();
         infoStage.setTitle("Info Window");
 
@@ -453,6 +413,9 @@ public class FlightExplorerView {
     }
 
     /**
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void addToDashboard(int flightNumber){
@@ -469,7 +432,11 @@ public class FlightExplorerView {
 
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createTitleSearchHold(VBox map, VBox scrolls) {
@@ -480,7 +447,11 @@ public class FlightExplorerView {
         this.titleSearchHold.setPadding(new Insets(10));
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createTitleSearch(Label title, HBox searchButtonBox) {
@@ -491,15 +462,72 @@ public class FlightExplorerView {
         this.titleSearch.setSpacing(25);
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void performSearch(TextField searchField) {
         String search = searchField.getText();
-        // searched term, search in database
+        String filterType = this.comboBox.getValue();
+        if (filterType.equals("select an item") && search.isEmpty()){
+            for (int i = 0; i < this.flightList.size(); i++) {
+                Button addFlight = new Button(this.flightList.get(i).toString());
+                int finalI = i;
+                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+                this.contentBox.getChildren().add(addFlight);
+            }
+        }
+        else if (search.isEmpty()){
+            Stage infoStage = new Stage();
+            infoStage.setTitle("Info Window");
+
+
+            // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
+            infoStage.initModality(Modality.APPLICATION_MODAL);
+
+            // Create a layout for the info window
+            StackPane infoLayout = new StackPane();
+            String info = "Please input a search term, to reset and show all flights,\n please leave this search term empty\n and leave filter type to \"select an item\"";
+            Label infoLabel = new javafx.scene.control.Label(info);
+            Font customFont = new Font("Arial", 24);
+            infoLabel.setFont(customFont);
+
+
+
+            infoLayout.getChildren().add(infoLabel);
+            Scene infoScene = new Scene(infoLayout, 700, 700);
+            infoStage.setScene(infoScene);
+
+            // Show the info window
+            infoStage.show();
+        }
+        else{
+            SearchFlights searchFlights = new SearchFlights(this.flightList);
+            ArrayList<Flight> searchResult = searchFlights.search(filterType, search);
+            this.contentBox.getChildren().clear();
+            for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
+                Button addFlight = new Button(searchResult.get(i).toString());
+                int finalI = i;
+                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+                this.contentBox.getChildren().add(addFlight); // #TODO
+            }
+
+
+        }
+
+
+
+
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createScrolls(Label flightTitle, ScrollPane scrollPane, Label dashboardTitle, ScrollPane pinnedPane) {
@@ -509,7 +537,11 @@ public class FlightExplorerView {
         this.scrolls.setAlignment(Pos.CENTER);
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createPinnedPane(VBox pinned) {
@@ -520,7 +552,11 @@ public class FlightExplorerView {
         this.pinnedPane.setMaxWidth(500);
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createScrollPane(VBox contentBox) {
@@ -531,7 +567,11 @@ public class FlightExplorerView {
         this.scrollPane.setMaxWidth(500);
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createContentBox() {
@@ -540,11 +580,15 @@ public class FlightExplorerView {
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
             addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
-            contentBox.getChildren().add(addFlight); // #TODO
+            this.contentBox.getChildren().add(addFlight); // #TODO
         }
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createSearchButton() {
@@ -554,7 +598,11 @@ public class FlightExplorerView {
         this.searchButton.setOnAction(e -> performSearch(searchBar));
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createSearchBar() {
@@ -570,31 +618,49 @@ public class FlightExplorerView {
         });
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createComboBox() {
         ObservableList<String> items = FXCollections.observableArrayList(
-                "airline name",
+                "select an item",
+                "date",
                 "flight status",
-                "flight number",
-                "flight iata",
-                "flight icao",
-                "departure iata",
-                "arrival iata",
-                "limit",
-                "offset"
+                "altitude",
+                "flight name",
+                "grounded",
+                "status",
+                "direction",
+                "arrival airport",
+                "arrival airport ID",
+                "arrival airport details",
+                "arrival airport location",
+                "departure airport",
+                "departure airport ID",
+                "departure airport details",
+                "departure airport location",
+                "location of flight"
+
+
         );
         this.comboBox.setItems(items);
-        this.comboBox.setValue("Select an item");
+        this.comboBox.setValue("select an item");
         this.comboBox.setOnAction(e -> {
             String selectedValue = this.comboBox.getValue();
-            // return to search to find by type #TODO
+
         });
         this.comboBox.setStyle("-fx-font-size: 26px;");
     }
 
-    /*
+    /**
+     *
+     * Initialize UI
+     *
+     * @return void
      *
      */
     private void createMap() {
