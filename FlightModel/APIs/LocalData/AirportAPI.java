@@ -3,6 +3,7 @@ package FlightModel.APIs.LocalData;
 import FlightModel.Airports.iataAirport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -22,6 +23,18 @@ public class AirportAPI {
 
 
     private List<iataAirport> airports;
+
+    private HashMap<String, ArrayList<String>> cityToIata; //maps city name to the list of aita codes for airports in that city
+
+    /**
+     * Constructor for AirportAPI, creates a list of iataAirport objects that can be used to get airport information, populated from the local data file.
+     */
+    public AirportAPI() {
+        this.airports = new ArrayList<>();
+        this.cityToIata = new HashMap<>();
+        loadDataFromFile("FlightModel/dataFiles/iataAirports.csv");
+        loadCityNamesFromFile("FlightModel/dataFiles/cityNames.csv");
+    }
 
     /**
      * load the data from the local data file into the airports list
@@ -58,14 +71,46 @@ public class AirportAPI {
         return new iataAirport(iata, name, country, latitude, longitude);
     }
 
-    /**
-     * Constructor for AirportAPI, creates a list of iataAirport objects that can be used to get airport information, populated from the local data file.
-     */
-    public AirportAPI() {
-        this.airports = new ArrayList<>();
-        loadDataFromFile("FlightModel/dataFiles/iataAirports.csv");
+    private void loadCityNamesFromFile(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            // Skip the header line
+            reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                //trim the line up and including the first coma
+                line = line.substring(line.indexOf(",") + 1);
+                String[] parts = line.split(",");
+                if (parts.length == 13) {
+                    //city index = 1
+                    //iata index = 3
+                    String city = parts[1].replaceAll("\"", "");
+                    String iata = parts[3].replaceAll("\"", "");
+                    if (iata.equals("\\N")) {
+                        //skip this line if the iata code is null
+                        continue;
+                    }
+                    //check if arrayList at index has been initialized
+                    if (cityToIata.get(city) == null) {
+                        cityToIata.put(city, new ArrayList<>());
+                    }
+                    //add the iata code to the list of airports in that city
+                    cityToIata.get(city).add(iata);
+
+                } else {
+                    System.err.println("Invalid " + filePath + "CSV line: " + line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Returns the iata code for the given city.
+     */
+    public ArrayList<String> getIataFromCity(String city) {
+        return cityToIata.get(city);
+    }
 
     /**
      * Returns the iataAirport object with the given name.
