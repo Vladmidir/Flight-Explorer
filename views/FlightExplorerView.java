@@ -415,8 +415,8 @@ public class FlightExplorerView {
     }
 
     /**
-     * Initialize UI
-     *
+     * Adds a flight that was pinned to the dashboard and updates the hashmap
+     * @param flightNumber
      * @return void
      *
      */
@@ -436,8 +436,9 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Create a HBox to hold the map and teh scrollable on the right side of the app
+     * @param  map
+     * @param  scrolls
      * @return void
      *
      */
@@ -451,8 +452,9 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Creates a Vbox to store the title and search button
+     * @param   title
+     * @param searchButtonBox
      * @return void
      *
      */
@@ -466,8 +468,8 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Searches and filters the resulting flights and then updating those results on the dashboard and map
+     * @param  searchField
      * @return void
      *
      */
@@ -537,9 +539,11 @@ public class FlightExplorerView {
     }
 
     /**
-     *
-     * Initialize UI
-     *
+     * Creates the Vbox to store the scrollable panes for the dashboard and the flight list
+     * @param  flightTitle
+     * @param scrollPane
+     * @param  dashboardTitle
+     * @param pinnedPane
      * @return void
      *
      */
@@ -552,8 +556,8 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Creates the scrollable pane for the pinned flights
+     * @param  pinned
      * @return void
      *
      */
@@ -567,8 +571,8 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Creates the scrollable pane for the dashboard
+     * @param  contentBox
      * @return void
      *
      */
@@ -581,11 +585,8 @@ public class FlightExplorerView {
     }
 
     /**
-     *
-     * Initialize UI
-     *
+     * Creates the Box to store the flight results and display on the scrollable dashboard
      * @return void
-     *
      */
     private void createContentBox() {
         this.contentBox.setSpacing(15);
@@ -598,9 +599,7 @@ public class FlightExplorerView {
     }
 
     /**
-     *
-     * Initialize UI
-     *
+     * Creates a search button to submit searches
      * @return void
      *
      */
@@ -613,8 +612,7 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Create a search bar for user to type input into
      * @return void
      *
      */
@@ -633,8 +631,7 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Creates a combo box to select a filter type
      * @return void
      *
      */
@@ -671,10 +668,9 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Creates a map UI to Visualize flights on a map through a html file
+     * @param  dict a string of the flightList in JSON format
      * @return void
-     *
      */
     private void createMap(String dict) {
         try {
