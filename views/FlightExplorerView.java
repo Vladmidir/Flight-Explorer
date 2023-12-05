@@ -148,7 +148,7 @@ public class FlightExplorerView {
      * @return void
      */
     public void initUI() {
-        createMap(new ConvertToJSON(this.flightList).getFlightListJSON());
+        createMap(new ConvertToJSON(this.flightList).getFlightListJSON());// all code below initializes the UI by calling these methods to instantiate frontend
         createSearchBar();
         createComboBox();
         createSearchButton();
@@ -199,11 +199,11 @@ public class FlightExplorerView {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HashMap<String, String> responseBody = new HashMap<>();
+        HashMap<String, String> responseBody = new HashMap<>();// calls backend to get flight info and maps to hashmap.
         responseBody.put("flight_status", "active");
 
         RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
-        String search = realTimeFlightAPI.search(responseBody); // #TODO
+        String search = realTimeFlightAPI.search(responseBody);
 
         return this.explorer.getRealTimeFlights(responseBody);
     }
@@ -233,7 +233,7 @@ public class FlightExplorerView {
         flightInfo.putAll(this.flightList.get(flightNumber).getLongDetails());
 
         String info = "";
-        for (String key : flightInfo.keySet()) {
+        for (String key : flightInfo.keySet()) { // adds all info to a string
             if (key.equals("depAirport")){
                 info += "Departure Airport: " + flightInfo.get(key) + "\n";
                 Airport depAirport = this.flightList.get(flightNumber).getDepAirport();
@@ -265,7 +265,7 @@ public class FlightExplorerView {
 
         }
 
-        Button pinButton = new Button("Unpin this flight");
+        Button pinButton = new Button("Unpin this flight"); // now can be unpinned
         Label infoLabel = new javafx.scene.control.Label(info);
         Font customFont = new Font("Arial", 24);
         infoLabel.setFont(customFont);
@@ -277,7 +277,7 @@ public class FlightExplorerView {
         VBox pinCenter = new VBox(pinButton);
         pinCenter.setAlignment(Pos.CENTER);
         pinButton.setOnAction(e -> {
-            isPinned.put(Integer.valueOf(flightNumber), false);
+            isPinned.put(Integer.valueOf(flightNumber), false); // reset this so that it is no longer pinned.
             removeFromDashboard(flightList.get(flightNumber).toString());
             infoStage.close();
 
@@ -303,8 +303,7 @@ public class FlightExplorerView {
      */
     private void removeFromDashboard (String pinButton){
 
-//        pinned.getChildren().remove(pinButton);
-        pinned.getChildren().removeIf(node -> {
+        pinned.getChildren().removeIf(node -> { // button removes flight from dashboard
             if (node instanceof Button) {
             Button button = (Button) node;
             return pinButton.equals(button.getText());
@@ -316,7 +315,8 @@ public class FlightExplorerView {
 
     /**
      * this removes the button from the dashboard
-     * @param  flightNumber
+     * @param  flightNumber the flight number of the flight to be added by index
+     * @param  flightList the list of flights
      * @return void
      */
     private void showInfoWindowUnpinned(int flightNumber, ArrayList<Flight> flightList) {
@@ -334,7 +334,7 @@ public class FlightExplorerView {
         // Create a layout for the info window
         StackPane infoLayout = new StackPane();
         HashMap<String, String> flightInfo = flightList.get(flightNumber).getShortDetails();
-        flightInfo.putAll(flightList.get(flightNumber).getLongDetails());
+        flightInfo.putAll(flightList.get(flightNumber).getLongDetails()); // all the same as pinned info window
 
         String info = "";
         for (String key : flightInfo.keySet()) {
@@ -387,7 +387,7 @@ public class FlightExplorerView {
             infoStage.close();
 
         });
-        VBox hold = new VBox(infoLabel);
+        VBox hold = new VBox(infoLabel); // check if it is pinned or not. if it is, change button to text saying it is already pinned if not, add to dashboard
         if (!isPinned.get(flightNumber)){
             hold.getChildren().add(pinCenter);
         }
@@ -416,7 +416,7 @@ public class FlightExplorerView {
 
     /**
      * Adds a flight that was pinned to the dashboard and updates the hashmap
-     * @param flightNumber
+     * @param flightNumber the flight number of the flight to be added by index
      * @return void
      *
      */
@@ -437,8 +437,8 @@ public class FlightExplorerView {
     /**
      *
      * Create a HBox to hold the map and teh scrollable on the right side of the app
-     * @param  map
-     * @param  scrolls
+     * @param  map VBox that hold map and search bar
+     * @param  scrolls VBox that hold scrollable panes
      * @return void
      *
      */
@@ -453,8 +453,8 @@ public class FlightExplorerView {
     /**
      *
      * Creates a Vbox to store the title and search button
-     * @param   title
-     * @param searchButtonBox
+     * @param title the title of the app
+     * @param searchButtonBox the search button and search bar
      * @return void
      *
      */
@@ -469,16 +469,16 @@ public class FlightExplorerView {
     /**
      *
      * Searches and filters the resulting flights and then updating those results on the dashboard and map
-     * @param  searchField
+     * @param  searchField the search bar's info.
      * @return void
      *
      */
     private void performSearch(TextField searchField) {
-        String search = searchField.getText();
+        String search = searchField.getText(); // uses mediator design pattern to filter out searches. also optimizes code so it runs faster
         String filterType = this.comboBox.getValue();
-        SearchFlights searchFlights = new SearchFlights(this.flightList);
-        ArrayList<Flight> searchResult = searchFlights.search(filterType, search);
-        if (filterType.equals("select an item") && search.isEmpty()){
+        SearchFlights searchFlights = new SearchFlights(this.flightList); // take all flights to be searched
+        ArrayList<Flight> searchResult = searchFlights.search(filterType, search); // arraylist will store all flights that the object returns. this holds all the objects that it found
+        if (filterType.equals("select an item") && search.isEmpty()){ // resets the UI so all flights are displayed in flight list and map API
             this.contentBox.getChildren().clear();
             for (int i = 0; i < this.flightList.size(); i++) {
                 Button addFlight = new Button(this.flightList.get(i).toString());
@@ -487,11 +487,11 @@ public class FlightExplorerView {
                 this.contentBox.getChildren().add(addFlight);
             }
 
-            ConvertToJSON converting = new ConvertToJSON(this.flightList);
+            ConvertToJSON converting = new ConvertToJSON(this.flightList); // convert to talk to map API
             String dict = converting.getFlightListJSON();
             createMap(dict);
         }
-        else if (search.isEmpty()){
+        else if (search.isEmpty()){ // if empty, show error screen
             Stage infoStage = new Stage();
             infoStage.setTitle("Info Window");
 
@@ -515,16 +515,16 @@ public class FlightExplorerView {
             // Show the info window
             infoStage.show();
         }
-        else{
+        else{ // when a search term is true, this will filter out the search term.
             this.contentBox.getChildren().clear();
-            for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
+            for (int i = 0; i < searchResult.size(); i++) { // updates the flight list
                 Button addFlight = new Button(searchResult.get(i).toString());
                 int finalI = i;
                 addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, searchResult));
                 this.contentBox.getChildren().add(addFlight); // #TODO
             }
 
-            ConvertToJSON converting = new ConvertToJSON(searchResult);
+            ConvertToJSON converting = new ConvertToJSON(searchResult); // converts to JSON to talk to map API
             String dict = converting.getFlightListJSON();
             if (dict.equals("}")){
                 dict = "{}";
@@ -540,10 +540,10 @@ public class FlightExplorerView {
 
     /**
      * Creates the Vbox to store the scrollable panes for the dashboard and the flight list
-     * @param  flightTitle
-     * @param scrollPane
-     * @param  dashboardTitle
-     * @param pinnedPane
+     * @param  flightTitle the title of the flight list
+     * @param scrollPane the scrollable pane for the flight list
+     * @param  dashboardTitle the title of the dashboard
+     * @param pinnedPane the scrollable pane for the dashboard
      * @return void
      *
      */
@@ -557,7 +557,7 @@ public class FlightExplorerView {
     /**
      *
      * Creates the scrollable pane for the pinned flights
-     * @param  pinned
+     * @param  pinned the vbox that holds the pinned flights
      * @return void
      *
      */
@@ -572,7 +572,7 @@ public class FlightExplorerView {
     /**
      *
      * Creates the scrollable pane for the dashboard
-     * @param  contentBox
+     * @param  contentBox the vbox that holds the flight list
      * @return void
      *
      */
@@ -590,11 +590,11 @@ public class FlightExplorerView {
      */
     private void createContentBox() {
         this.contentBox.setSpacing(15);
-        for (int i = 0; i < this.flightList.size(); i++) { // add labels for flight. #TODO
+        for (int i = 0; i < this.flightList.size(); i++) { // adds all flights to the flight list
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
             addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, this.flightList));
-            this.contentBox.getChildren().add(addFlight); // #TODO
+            this.contentBox.getChildren().add(addFlight);
         }
     }
 

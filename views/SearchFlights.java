@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 /**
  * Class SearchFlights.
- * This class searches and fliters the flight list.
+ * This class searches and filters the flight list.
  */
 public class SearchFlights {
 
