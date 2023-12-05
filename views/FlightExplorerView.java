@@ -467,6 +467,52 @@ public class FlightExplorerView {
     private void performSearch(TextField searchField) {
         String search = searchField.getText();
         String filterType = this.comboBox.getValue();
+        if (filterType.equals("select an item") && search.isEmpty()){
+            for (int i = 0; i < this.flightList.size(); i++) {
+                Button addFlight = new Button(this.flightList.get(i).toString());
+                int finalI = i;
+                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+                this.contentBox.getChildren().add(addFlight);
+            }
+        }
+        else if (search.isEmpty()){
+            Stage infoStage = new Stage();
+            infoStage.setTitle("Info Window");
+
+
+            // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
+            infoStage.initModality(Modality.APPLICATION_MODAL);
+
+            // Create a layout for the info window
+            StackPane infoLayout = new StackPane();
+            String info = "Please input a search term, to reset and show all flights,\n please leave this search term empty\n and leave filter type to \"select an item\"";
+            Label infoLabel = new javafx.scene.control.Label(info);
+            Font customFont = new Font("Arial", 24);
+            infoLabel.setFont(customFont);
+
+
+
+            infoLayout.getChildren().add(infoLabel);
+            Scene infoScene = new Scene(infoLayout, 700, 700);
+            infoStage.setScene(infoScene);
+
+            // Show the info window
+            infoStage.show();
+        }
+        else{
+            SearchFlights searchFlights = new SearchFlights(this.flightList);
+            ArrayList<Flight> searchResult = searchFlights.search(filterType, search);
+            this.contentBox.getChildren().clear();
+            for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
+                Button addFlight = new Button(searchResult.get(i).toString());
+                int finalI = i;
+                addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
+                this.contentBox.getChildren().add(addFlight); // #TODO
+            }
+
+
+        }
+
 
 
 
@@ -529,7 +575,7 @@ public class FlightExplorerView {
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
             addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
-            contentBox.getChildren().add(addFlight); // #TODO
+            this.contentBox.getChildren().add(addFlight); // #TODO
         }
     }
 
@@ -576,21 +622,31 @@ public class FlightExplorerView {
      */
     private void createComboBox() {
         ObservableList<String> items = FXCollections.observableArrayList(
-                "airline name",
+                "select an item",
+                "date",
                 "flight status",
-                "flight number",
-                "flight iata",
-                "flight icao",
-                "departure iata",
-                "arrival iata",
-                "limit",
-                "offset"
+                "altitude",
+                "flight name",
+                "grounded",
+                "status",
+                "direction",
+                "arrival airport",
+                "arrival airport ID",
+                "arrival airport details",
+                "arrival airport location",
+                "departure airport",
+                "departure airport ID",
+                "departure airport details",
+                "departure airport location",
+                "location of flight"
+
+
         );
         this.comboBox.setItems(items);
-        this.comboBox.setValue("Select an item");
+        this.comboBox.setValue("select an item");
         this.comboBox.setOnAction(e -> {
             String selectedValue = this.comboBox.getValue();
-            // return to search to find by type #TODO
+
         });
         this.comboBox.setStyle("-fx-font-size: 26px;");
     }
