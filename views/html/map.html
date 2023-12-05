@@ -125,7 +125,7 @@
     var map = L.map('map', {
       center: [39.73, -104.99],
       zoom: 10,
-      layers: [osm, cities]
+      layers: [osm] //cities]
     }).setView([51.505, -1.09], 10);
     var mapLineSize = 10;
 
@@ -135,54 +135,104 @@
       "<span style='color: blue'>Topographical Map</span>": openTopoMap
     };
 
-    var overlayMaps = {
-      "Cities": cities
-    };
+    //var overlayMaps = {
+    //  "Cities": cities
+    //};
 
-    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+    var layerControl = L.control.layers(baseMaps).addTo(map); //overlayMaps).addTo(map);
 
-    var crownHill = L.marker([39.75, -105.09]).bindPopup('This is Crown Hill Park.'),
-            rubyHill = L.marker([39.68, -105.00]).bindPopup('This is Ruby Hill Park.');
+   // var crownHill = L.marker([39.75, -105.09]).bindPopup('This is Crown Hill Park.'),
+     //       rubyHill = L.marker([39.68, -105.00]).bindPopup('This is Ruby Hill Park.');
 
-    var parks = L.layerGroup([crownHill, rubyHill]);
-    layerControl.addOverlay(parks, "Parks");
+    //var parks = L.layerGroup([crownHill, rubyHill]);
+    //layerControl.addOverlay(parks, "Parks");
 
+    var flightList = {};
+    function createFlights(dict) {
+      flightList = {};
 
-    var polygon = L.polygon([
-      [51.505, -1.09],
-      [65.503, -20.06],
-    ], {color: 'blue', weight: 6}).addTo(map);
+      for (var key in dict) {
 
-    var marker2 = L.marker([51.505, -1.09]).addTo(map);
-    var marker3 = L.marker( [65.503, -20.06]).addTo(map);
+        flightList[key] = [];
 
-    function showMessage() {
-      // var popup = L.popup()
-      //         .setLatLng([51.513, -1.09])
-      //         .setContent("I am a standalone popup.")
-      //         .openOn(map);
-      // marker2.bindPopup(number).openPopup(popup);
-      $("#text_modal").text(number);
-      $('#myModalSent').modal('show');
+        var marker1 = L.marker(dict[key]["arrAirportLocation"]).addTo(map);
+        var marker2 = L.marker(dict[key]["depAirportLocation"]).addTo(map);
+
+        var popup1 = L.popup()
+                .setLatLng(dict[key]["arrAirportLocation"])
+                .setContent(dict[key]["arrAirportDetail"])
+                .openOn(map);
+
+        var popup2 = L.popup()
+                .setLatLng(dict[key]["depAirportLocation"])
+                .setContent(dict[key]["depAirportDetail"])
+                .openOn(map);
+
+        marker1.bindPopup(dict[key]["arrAirportDetail"]).openPopup();
+        marker2.bindPopup(dict[key]["depAirportDetail"]).openPopup();
+
+        var polyline = L.polygon([
+          dict[key]["arrAirportLocation"],
+          dict[key]["depAirportLocation"],
+        ], {color: 'blue', weight: 10}).addTo(map);
+
+        polyline.on('click', onPolyClick);
+
+        var arrdetails = transferData(dict[key]["ShortDetails"]);
+        var depdetails = dict[key]["depAirportDetail"];
+
+        flightList[key].push(marker1);//0
+        flightList[key].push(marker2);//1
+        flightList[key].push(popup1);//2
+        flightList[key].push(popup2);//3
+        flightList[key].push(polyline);//4
+        flightList[key].push(10);//5
+        flightList[key].push(arrdetails);//6
+        flightList[key].push(depdetails);//7
+        flightList[key].push(dict[key]["flightDetail"]);//8
+
+      }
 
     }
 
+    function onPolyClick(e) {
+      for (var key in flightList) {
+        if (flightList[key][4] === e.target) {
+          $('#myModalSent').modal('show');
+          $('#modal-title').text(flightList[key][8]);
+          $('#text-modal').text(flightList[key][6] + flightList[key][7]);
+          break;
+        }
+      }
+    }
+
+
     function refocus() {
-      map.setView([51.505, -1.09], 10);
+      map.setView([31, 45], 2);
     }
     function lineThickness(operation) {
       //Increase or decrease the line thickness
-      if (operation == "+") {
-        if (mapLineSize < 40) {
-          mapLineSize += 2;
-          polygon.setStyle({weight: mapLineSize});
-        }
-      } else if (operation == "-") {
-        if (mapLineSize > 2) {
-          mapLineSize -= 2;
-          polygon.setStyle({weight: mapLineSize});
+      for (var key in flightList) {
+        if (operation === "+") {
+          if (flightList[key][5] < 40) {
+            flightList[key][5] += 2;
+            flightList[key][4].setStyle({weight: flightList[key][5] });
+          }
+        } else if (operation === "-") {
+          if (flightList[key][5] > 2) {
+            flightList[key][5] -= 2;
+            flightList[key][4].setStyle({weight: flightList[key][5] });
+          }
         }
       }
+    }
+
+    function transferData(dict) {
+      var finalString = "";
+      for(var detail in dict) {
+        finalString = finalString + detail + ": " + dict[detail] + '\n';
+      }
+      return finalString;
     }
 
   } catch (error) {

@@ -610,9 +610,7 @@ public class FlightExplorerView {
             // Add a listener to wait for the page to finish loading
             this.webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == Worker.State.SUCCEEDED) {
-                    String var = "'1'";
-                    this.webEngine.executeScript("const number = " + var + ";");
-                    this.webEngine.executeScript("showMessage();");
+                    this.webEngine.executeScript("createFlights(dict);");
 
                 } else if (newValue == Worker.State.FAILED) {
                     System.err.println( this.webEngine.getLoadWorker().getMessage());
