@@ -477,6 +477,7 @@ public class FlightExplorerView {
         SearchFlights searchFlights = new SearchFlights(this.flightList);
         ArrayList<Flight> searchResult = searchFlights.search(filterType, search);
         if (filterType.equals("select an item") && search.isEmpty()){
+            this.contentBox.getChildren().clear();
             for (int i = 0; i < this.flightList.size(); i++) {
                 Button addFlight = new Button(this.flightList.get(i).toString());
                 int finalI = i;
