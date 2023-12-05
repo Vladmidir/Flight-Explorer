@@ -148,7 +148,7 @@ public class FlightExplorerView {
      * @return void
      */
     public void initUI() {
-        createMap();
+        createMap(new SearchFlights(this.flightList));
         createSearchBar();
         createComboBox();
         createSearchButton();
@@ -472,6 +472,8 @@ public class FlightExplorerView {
     private void performSearch(TextField searchField) {
         String search = searchField.getText();
         String filterType = this.comboBox.getValue();
+        SearchFlights searchFlights = new SearchFlights(this.flightList);
+        ArrayList<Flight> searchResult = searchFlights.search(filterType, search);
         if (filterType.equals("select an item") && search.isEmpty()){
             for (int i = 0; i < this.flightList.size(); i++) {
                 Button addFlight = new Button(this.flightList.get(i).toString());
@@ -505,8 +507,6 @@ public class FlightExplorerView {
             infoStage.show();
         }
         else{
-            SearchFlights searchFlights = new SearchFlights(this.flightList);
-            ArrayList<Flight> searchResult = searchFlights.search(filterType, search);
             this.contentBox.getChildren().clear();
             for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
                 Button addFlight = new Button(searchResult.get(i).toString());
@@ -516,8 +516,9 @@ public class FlightExplorerView {
             }
 
 
-        }
 
+        }
+        createMap(searchFlights);
 
 
 
@@ -663,7 +664,7 @@ public class FlightExplorerView {
      * @return void
      *
      */
-    private void createMap() {
+    private void createMap(SearchFlights searchFlights) {
         try {
             // Load the HTML file into the WebView
             String basePath = System.getProperty("user.dir");
@@ -676,7 +677,10 @@ public class FlightExplorerView {
             // Add a listener to wait for the page to finish loading
             this.webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == Worker.State.SUCCEEDED) {
-                    this.webEngine.executeScript("createFlights(dict);");
+                    String dict = searchFlights.getJSONSearched();
+                    System.out.println(dict);
+                    this.webEngine.executeScript("createFlights(" + dict + "  );");
+
 
                 } else if (newValue == Worker.State.FAILED) {
                     System.err.println( this.webEngine.getLoadWorker().getMessage());
