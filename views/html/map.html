@@ -181,8 +181,8 @@
 
         polyline.on('click', onPolyClick);
 
-        var arrdetails = transferData(dict[key]["ShortDetails"]);
-        var depdetails = dict[key]["depAirportDetail"];
+        var arrdetails = dict[key]["ShortDetails"];
+        arrdetails["depAirportDetail"] = dict[key]["depAirportDetail"];
 
         flightList[key].push(marker1);//0
         flightList[key].push(marker2);//1
@@ -191,8 +191,7 @@
         flightList[key].push(polyline);//4
         flightList[key].push(10);//5
         flightList[key].push(arrdetails);//6
-        flightList[key].push(depdetails);//7
-        flightList[key].push(dict[key]["flightDetail"]);//8
+        flightList[key].push(dict[key]["flightDetail"]);//7
 
       }
 
