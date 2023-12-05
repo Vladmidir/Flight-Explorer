@@ -147,26 +147,29 @@
     //var parks = L.layerGroup([crownHill, rubyHill]);
     //layerControl.addOverlay(parks, "Parks");
 
+    var myLayerGroup = L.layerGroup().addTo(map);
+
     var flightList = {};
     function createFlights(dict) {
       flightList = {};
+      myLayerGroup.clearLayers();
 
       for (var key in dict) {
 
         flightList[key] = [];
 
-        var marker1 = L.marker(dict[key]["arrAirportLocation"]).addTo(map);
-        var marker2 = L.marker(dict[key]["depAirportLocation"]).addTo(map);
+        var marker1 = L.marker(dict[key]["arrAirportLocation"]).addTo(myLayerGroup);
+        var marker2 = L.marker(dict[key]["depAirportLocation"]).addTo(myLayerGroup);
 
         var popup1 = L.popup()
                 .setLatLng(dict[key]["arrAirportLocation"])
                 .setContent(dict[key]["arrAirportDetail"])
-                .openOn(map);
+                .openOn(myLayerGroup);
 
         var popup2 = L.popup()
                 .setLatLng(dict[key]["depAirportLocation"])
                 .setContent(dict[key]["depAirportDetail"])
-                .openOn(map);
+                .openOn(myLayerGroup);
 
         marker1.bindPopup(dict[key]["arrAirportDetail"]).openPopup();
         marker2.bindPopup(dict[key]["depAirportDetail"]).openPopup();
@@ -174,12 +177,12 @@
         var polyline = L.polygon([
           dict[key]["arrAirportLocation"],
           dict[key]["depAirportLocation"],
-        ], {color: 'blue', weight: 10}).addTo(map);
+        ], {color: 'blue', weight: 10}).addTo(myLayerGroup);
 
         polyline.on('click', onPolyClick);
 
-        var arrdetails = transferData(dict[key]["ShortDetails"]);
-        var depdetails = dict[key]["depAirportDetail"];
+        var arrdetails = dict[key]["ShortDetails"];
+        arrdetails["depAirportDetail"] = dict[key]["depAirportDetail"];
 
         flightList[key].push(marker1);//0
         flightList[key].push(marker2);//1
@@ -188,8 +191,7 @@
         flightList[key].push(polyline);//4
         flightList[key].push(10);//5
         flightList[key].push(arrdetails);//6
-        flightList[key].push(depdetails);//7
-        flightList[key].push(dict[key]["flightDetail"]);//8
+        flightList[key].push(dict[key]["flightDetail"]);//7
 
       }
 

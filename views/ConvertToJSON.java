@@ -29,6 +29,7 @@ public class ConvertToJSON {
      * @param  flightList List of all flights
      */
     public ConvertToJSON(ArrayList<Flight> flightList) {
+        this.flightList = flightList;
         String temp = "{";
         for (int i = 0; i < flightList.size(); i++) {
             HashMap<String, String> flightInfo = new HashMap<>();
@@ -72,7 +73,6 @@ public class ConvertToJSON {
         }
         temp = temp.substring(0, temp.length() - 1);
         temp += "}";
-
         this.flightListJSON = temp;
 
     }

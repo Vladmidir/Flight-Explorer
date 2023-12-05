@@ -148,7 +148,7 @@ public class FlightExplorerView {
      * @return void
      */
     public void initUI() {
-        createMap(new SearchFlights(this.flightList));
+        createMap(new ConvertToJSON(this.flightList).getFlightListJSON());
         createSearchBar();
         createComboBox();
         createSearchButton();
@@ -172,6 +172,8 @@ public class FlightExplorerView {
         //set styles for the flight and dashboard titles
         this.flightTitle.setStyle("-fx-font-size: 28;");
         this.dashboardTitle.setStyle("-fx-font-size: 28;");
+
+
 
         //create vbox scrolls and set styles
         createScrolls(this.flightTitle, this.scrollPane, this.dashboardTitle, this.pinnedPane);
@@ -481,6 +483,10 @@ public class FlightExplorerView {
                 addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI));
                 this.contentBox.getChildren().add(addFlight);
             }
+
+            ConvertToJSON converting = new ConvertToJSON(this.flightList);
+            String dict = converting.getFlightListJSON();
+            createMap(dict);
         }
         else if (search.isEmpty()){
             Stage infoStage = new Stage();
@@ -515,10 +521,15 @@ public class FlightExplorerView {
                 this.contentBox.getChildren().add(addFlight); // #TODO
             }
 
-
+            ConvertToJSON converting = new ConvertToJSON(searchResult);
+            String dict = converting.getFlightListJSON();
+            if (dict.equals("}")){
+                dict = "{}";
+            }
+            createMap(dict);
 
         }
-        createMap(searchFlights);
+
 
 
 
@@ -664,7 +675,7 @@ public class FlightExplorerView {
      * @return void
      *
      */
-    private void createMap(SearchFlights searchFlights) {
+    private void createMap(String dict) {
         try {
             // Load the HTML file into the WebView
             String basePath = System.getProperty("user.dir");
@@ -677,8 +688,6 @@ public class FlightExplorerView {
             // Add a listener to wait for the page to finish loading
             this.webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == Worker.State.SUCCEEDED) {
-                    String dict = searchFlights.getJSONSearched();
-                    System.out.println(dict);
                     this.webEngine.executeScript("createFlights(" + dict + "  );");
 
 
