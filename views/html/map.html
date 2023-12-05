@@ -101,12 +101,12 @@
 
 <script>
   try {
-    var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
-            denver    = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
-            aurora    = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.'),
-            golden    = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.');
+    //var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
+     //       denver    = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
+    //        aurora    = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.'),
+     //       golden    = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.');
 
-    var cities = L.layerGroup([littleton, denver, aurora, golden]);
+    ///var cities = L.layerGroup([littleton, denver, aurora, golden]);
 
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -147,26 +147,29 @@
     //var parks = L.layerGroup([crownHill, rubyHill]);
     //layerControl.addOverlay(parks, "Parks");
 
+    var myLayerGroup = L.layerGroup().addTo(map);
+
     var flightList = {};
     function createFlights(dict) {
       flightList = {};
+      myLayerGroup.clearLayers();
 
       for (var key in dict) {
 
         flightList[key] = [];
 
-        var marker1 = L.marker(dict[key]["arrAirportLocation"]).addTo(map);
-        var marker2 = L.marker(dict[key]["depAirportLocation"]).addTo(map);
+        var marker1 = L.marker(dict[key]["arrAirportLocation"]).addTo(myLayerGroup);
+        var marker2 = L.marker(dict[key]["depAirportLocation"]).addTo(myLayerGroup);
 
         var popup1 = L.popup()
                 .setLatLng(dict[key]["arrAirportLocation"])
                 .setContent(dict[key]["arrAirportDetail"])
-                .openOn(map);
+                .openOn(myLayerGroup);
 
         var popup2 = L.popup()
                 .setLatLng(dict[key]["depAirportLocation"])
                 .setContent(dict[key]["depAirportDetail"])
-                .openOn(map);
+                .openOn(myLayerGroup);
 
         marker1.bindPopup(dict[key]["arrAirportDetail"]).openPopup();
         marker2.bindPopup(dict[key]["depAirportDetail"]).openPopup();
@@ -174,7 +177,7 @@
         var polyline = L.polygon([
           dict[key]["arrAirportLocation"],
           dict[key]["depAirportLocation"],
-        ], {color: 'blue', weight: 10}).addTo(map);
+        ], {color: 'blue', weight: 10}).addTo(myLayerGroup);
 
         polyline.on('click', onPolyClick);
 
