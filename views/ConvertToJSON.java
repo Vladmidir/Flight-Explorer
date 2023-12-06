@@ -18,7 +18,7 @@ public class ConvertToJSON {
     private String flightListJSON = "";
     private ArrayList<Flight> flightList;
 
-    HashMap<Integer, HashMap<String, String>> flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
+    public HashMap<Integer, HashMap<String, String>> flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
 
 
 
