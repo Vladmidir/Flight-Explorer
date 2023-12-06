@@ -71,6 +71,11 @@ public class AirportAPI {
         return new iataAirport(iata, name, country, latitude, longitude);
     }
 
+    /**
+     *
+     * @param filePath - the path to the file containing the city names
+     * @return void: populates the cityToIata hashmap
+     */
     private void loadCityNamesFromFile(String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;

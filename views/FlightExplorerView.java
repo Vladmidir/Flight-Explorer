@@ -61,27 +61,8 @@ import views.Bridge;
 public class FlightExplorerView {
     FlightExplorer explorer;
     Stage stage;
-    //add buttons
-
-    GridPane grid = new GridPane();
-    //possible labels
-    // create vbox
-
-
-    Label title = new Label("Flight Explorer");
-    TextField searchBar = new TextField();
-
-
-    HBox searchBox = new HBox(this.searchBar);
 
     Scene scene;
-
-    ImageView imageView;
-
-    VBox hold;
-
-
-    VBox titleSearch;
 
     WebView webView = new WebView();
 
@@ -93,21 +74,10 @@ public class FlightExplorerView {
 
     Button searchButton = new Button("Search");
 
-    HBox searchButtonBox = new HBox(this.comboBox, this.searchBox, this.searchButton);
-
-    Label flightTitle = new Label("Flights");
-
-    Label dashboardTitle = new Label("Dashboard");
-
     ScrollPane scrollPane;
 
     ScrollPane pinnedPane;
-
     VBox pinned = new VBox();
-
-    VBox scrolls;
-
-    HBox titleSearchHold;
 
     ArrayList<Flight> flightList;
 
@@ -149,36 +119,78 @@ public class FlightExplorerView {
      */
     public void initUI() {
         createMap(new ConvertToJSON(this.flightList).getFlightListJSON());
-        createSearchBar();
+
+        //Create search bar
+        TextField searchBar = new TextField();
+        searchBar.setPromptText("Search for a flight");
+        searchBar.setPrefWidth(600);
+        searchBar.setPrefHeight(75);
+        searchBar.setStyle("-fx-font-size: 28;");
+
+        searchBar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                performSearch(searchBar);
+            }
+        });
+
+        //Create search box and button
         createComboBox();
-        createSearchButton();
+        this.searchButton.getStyleClass().add("button");
+        this.searchButton.setStyle("-fx-right: 40px;");
+        this.searchButton.setStyle(" -fx-font-size: 35px;");
+        this.searchButton.setOnAction(e -> performSearch(searchBar));
 
-        this.searchBox.setAlignment(Pos.TOP_LEFT);
-        this.title.setStyle("-fx-font-size: 28;");
+        HBox searchBox = new HBox(searchBar);
+        searchBox.setAlignment(Pos.TOP_LEFT);
+        Label title = new Label("Flight Explorer");
+        title.setStyle("-fx-font-size: 28;");
 
-        this.searchButtonBox.setSpacing(15);
-        this.searchButtonBox.setPadding(new Insets(10));
+        HBox searchButtonBox = new HBox(this.comboBox, searchBox, this.searchButton);
+        searchButtonBox.setSpacing(15);
+        searchButtonBox.setPadding(new Insets(10));
 
-        createTitleSearch(this.title, this.searchButtonBox);
+        //Create title and search box VBox and set styles
+        VBox titleSearch = new VBox(title, searchButtonBox);
+        titleSearch.setAlignment(Pos.TOP_LEFT);
+        titleSearch.setPadding(new Insets(25));
+        titleSearch.setSpacing(25);
 
-        //Create flight results Box
+        //Create flight results Box that is scrollable
         createContentBox();
-        createScrollPane(this.contentBox);
+
+        this.scrollPane = new ScrollPane(this.contentBox);
+        this.scrollPane.setPrefViewportHeight(300); // Set the desired pixel amount
+        this.scrollPane.setMaxHeight(300);
+        this.scrollPane.setPrefViewportWidth(500);
+        this.scrollPane.setMaxWidth(500);
 
         //Create Pinned Box
         this.pinned.setSpacing(15);
-        createPinnedPane(this.pinned);
+        this.pinnedPane = new ScrollPane(this.pinned);
+        this.pinnedPane.setPrefViewportHeight(300); // Set the same desired pixel amount
+        this.pinnedPane.setMaxHeight(300);
+        this.pinnedPane.setPrefViewportWidth(500);
+        this.pinnedPane.setMaxWidth(500);
+
 
         //set styles for the flight and dashboard titles
-        this.flightTitle.setStyle("-fx-font-size: 28;");
-        this.dashboardTitle.setStyle("-fx-font-size: 28;");
-
-
+        Label flightTitle = new Label("Flights");
+        Label dashboardTitle = new Label("Dashboard");
+        flightTitle.setStyle("-fx-font-size: 28;");
+        dashboardTitle.setStyle("-fx-font-size: 28;");
 
         //create vbox scrolls and set styles
-        createScrolls(this.flightTitle, this.scrollPane, this.dashboardTitle, this.pinnedPane);
-        //create vbox to display
-        createTitleSearchHold(new VBox(this.titleSearch ,this.webView), this.scrolls );
+        VBox scrolls = new VBox(flightTitle, this.scrollPane, dashboardTitle, this.pinnedPane);
+        scrolls.setSpacing(40);
+        scrolls.setPadding(new Insets(10));
+        scrolls.setAlignment(Pos.CENTER);
+
+        //create vbox to display the map and the scrollable on the right side of the app
+        HBox titleSearchHold = new HBox( new VBox(titleSearch ,this.webView), scrolls);
+        titleSearchHold.setAlignment(Pos.TOP_LEFT);
+        titleSearchHold.setSpacing(10);
+        titleSearchHold.setPadding(new Insets(10));
+
         //Set the scene
         this.scene = new Scene(titleSearchHold, 1440, 1000);
         this.stage.setScene(this.scene);
@@ -203,7 +215,7 @@ public class FlightExplorerView {
         responseBody.put("flight_status", "active");
 
         RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
-        String search = realTimeFlightAPI.search(responseBody); // #TODO
+        String search = realTimeFlightAPI.search(responseBody);
 
         return this.explorer.getRealTimeFlights(responseBody);
     }
@@ -303,7 +315,6 @@ public class FlightExplorerView {
      */
     private void removeFromDashboard (String pinButton){
 
-//        pinned.getChildren().remove(pinButton);
         pinned.getChildren().removeIf(node -> {
             if (node instanceof Button) {
             Button button = (Button) node;
@@ -316,7 +327,7 @@ public class FlightExplorerView {
 
     /**
      * this removes the button from the dashboard
-     * @param  flightNumber
+     * @param  flightNumber the flight number of the flight to be added
      * @return void
      */
     private void showInfoWindowUnpinned(int flightNumber, ArrayList<Flight> flightList) {
@@ -415,8 +426,8 @@ public class FlightExplorerView {
     }
 
     /**
-     * Initialize UI
-     *
+     * Adds a flight that was pinned to the dashboard and updates the hashmap
+     * @param flightNumber the flight number of the flight to be added
      * @return void
      *
      */
@@ -436,38 +447,8 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
-     * @return void
-     *
-     */
-    private void createTitleSearchHold(VBox map, VBox scrolls) {
-
-        this.titleSearchHold = new HBox( map, scrolls);
-        this.titleSearchHold.setAlignment(Pos.TOP_LEFT);
-        this.titleSearchHold.setSpacing(10);
-        this.titleSearchHold.setPadding(new Insets(10));
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
-     * @return void
-     *
-     */
-    private void createTitleSearch(Label title, HBox searchButtonBox) {
-
-        this.titleSearch = new VBox(title, searchButtonBox); // ADD MAP HERE
-        this.titleSearch.setAlignment(Pos.TOP_LEFT);
-        this.titleSearch.setPadding(new Insets(25));
-        this.titleSearch.setSpacing(25);
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
+     * Searches and filters the resulting flights and then updating those results on the dashboard and map
+     * @param  searchField the text field to search by
      * @return void
      *
      */
@@ -515,11 +496,11 @@ public class FlightExplorerView {
         }
         else{
             this.contentBox.getChildren().clear();
-            for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
+            for (int i = 0; i < searchResult.size(); i++) {
                 Button addFlight = new Button(searchResult.get(i).toString());
                 int finalI = i;
                 addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, searchResult));
-                this.contentBox.getChildren().add(addFlight); // #TODO
+                this.contentBox.getChildren().add(addFlight);
             }
 
             ConvertToJSON converting = new ConvertToJSON(searchResult);
@@ -537,104 +518,22 @@ public class FlightExplorerView {
     }
 
     /**
-     *
-     * Initialize UI
-     *
+     * Creates the Box to store the flight results and display on the scrollable dashboard
      * @return void
-     *
-     */
-    private void createScrolls(Label flightTitle, ScrollPane scrollPane, Label dashboardTitle, ScrollPane pinnedPane) {
-        this.scrolls = new VBox(flightTitle, scrollPane, dashboardTitle, pinnedPane);
-        this.scrolls.setSpacing(40);
-        this.scrolls.setPadding(new Insets(10));
-        this.scrolls.setAlignment(Pos.CENTER);
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
-     * @return void
-     *
-     */
-    private void createPinnedPane(VBox pinned) {
-        this.pinnedPane = new ScrollPane(pinned);
-        this.pinnedPane.setPrefViewportHeight(300); // Set the same desired pixel amount
-        this.pinnedPane.setMaxHeight(300);
-        this.pinnedPane.setPrefViewportWidth(500);
-        this.pinnedPane.setMaxWidth(500);
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
-     * @return void
-     *
-     */
-    private void createScrollPane(VBox contentBox) {
-        this.scrollPane = new ScrollPane(contentBox);
-        this.scrollPane.setPrefViewportHeight(300); // Set the desired pixel amount
-        this.scrollPane.setMaxHeight(300);
-        this.scrollPane.setPrefViewportWidth(500);
-        this.scrollPane.setMaxWidth(500);
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
-     * @return void
-     *
      */
     private void createContentBox() {
         this.contentBox.setSpacing(15);
-        for (int i = 0; i < this.flightList.size(); i++) { // add labels for flight. #TODO
+        for (int i = 0; i < this.flightList.size(); i++) {
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
             addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, this.flightList));
-            this.contentBox.getChildren().add(addFlight); // #TODO
+            this.contentBox.getChildren().add(addFlight);
         }
     }
 
     /**
      *
-     * Initialize UI
-     *
-     * @return void
-     *
-     */
-    private void createSearchButton() {
-        this.searchButton.getStyleClass().add("button");
-        this.searchButton.setStyle("-fx-right: 40px;");
-        this.searchButton.setStyle(" -fx-font-size: 35px;");
-        this.searchButton.setOnAction(e -> performSearch(searchBar));
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
-     * @return void
-     *
-     */
-    private void createSearchBar() {
-        this.searchBar.setPromptText("Search for a flight");
-        this.searchBar.setPrefWidth(600);
-        this.searchBar.setPrefHeight(75);
-        this.searchBar.setStyle("-fx-font-size: 28;");
-
-        searchBar.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                performSearch(searchBar);
-            }
-        });
-    }
-
-    /**
-     *
-     * Initialize UI
-     *
+     * Creates a combo box to select a filter type
      * @return void
      *
      */
@@ -671,10 +570,9 @@ public class FlightExplorerView {
 
     /**
      *
-     * Initialize UI
-     *
+     * Creates a map UI to Visualize flights on a map through a html file
+     * @param  dict a string of the flightList in JSON format
      * @return void
-     *
      */
     private void createMap(String dict) {
         try {

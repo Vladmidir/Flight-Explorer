@@ -18,7 +18,7 @@ public class ConvertToJSON {
     private String flightListJSON = "";
     private ArrayList<Flight> flightList;
 
-    HashMap<Integer, HashMap<String, String>> flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
+        public HashMap<Integer, HashMap<String, String>> flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
 
 
 
@@ -29,10 +29,10 @@ public class ConvertToJSON {
      * @param  flightList List of all flights
      */
     public ConvertToJSON(ArrayList<Flight> flightList) {
-        this.flightList = flightList;
-        String temp = "{";
-        for (int i = 0; i < flightList.size(); i++) {
-            HashMap<String, String> flightInfo = new HashMap<>();
+        this.flightList = flightList; // take the list
+        String temp = "{"; // start of JSON
+        for (int i = 0; i < flightList.size(); i++) { // loop through the list
+            HashMap<String, String> flightInfo = new HashMap<>(); // everything below this takes all the values in the flight object and puts them into the string as JSON format
             Airport arrAirport = flightList.get(i).getArrAirport();
             Airport depAirport = flightList.get(i).getDepAirport();
             flightInfo.put("date",flightList.get(i).getShortDetails().get("date"));
@@ -71,9 +71,9 @@ public class ConvertToJSON {
             temp += "\"flightDetail\":"+"\""+flightList.get(i).toString().substring(8)+"\"},";
             this.flightsHashMap.put(i, flightInfo);
         }
-        temp = temp.substring(0, temp.length() - 1);
+        temp = temp.substring(0, temp.length() - 1); // remove last comma
         temp += "}";
-        if (temp.equals("}")) {
+        if (temp.equals("}")) { // if the flightlist is empty, make the JSON = {}
             temp = "{}";
         }
         this.flightListJSON = temp;
@@ -105,7 +105,7 @@ public class ConvertToJSON {
      * @return hashmap of flights details
      */
     public void createHashMap() {
-        HashMap<Integer, HashMap<String, String>> flightDetails = new HashMap<Integer, HashMap<String, String>>();
+        HashMap<Integer, HashMap<String, String>> flightDetails = new HashMap<Integer, HashMap<String, String>>(); // does the same thing as the constructor but instead does it to a hashmap
         for (int i = 0; i < flightList.size(); i++) {
             Airport arrAirport = flightList.get(i).getArrAirport();
             Airport depAirport = flightList.get(i).getDepAirport();

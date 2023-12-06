@@ -37,7 +37,7 @@ public class FlightExplorerApp extends Application {
             e.printStackTrace();
         }
         AirportAPI airportAPI = new AirportAPI();
-        this.model = new FlightExplorer(new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY")), null, airportAPI); //FlightExplorer NOT IMPLEMENTED #TODO
+        this.model = new FlightExplorer(new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY")), null, airportAPI);
         this.view = new FlightExplorerView(model, primaryStage);
     }
 

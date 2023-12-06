@@ -7,7 +7,11 @@ import java.util.HashMap;
  *  Therefore, this class is not implemented.
  */
 public class HistoricFlightAPI implements FlightAPIEndPoint{
-
+    /**
+     *
+     * @param params - the parameters to be added to the url
+     * @return String: the response body from the api
+     */
     @Override
     public String search(HashMap<String, String> params) {
         return null;

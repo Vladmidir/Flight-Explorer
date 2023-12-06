@@ -47,7 +47,9 @@ public class RealTimeFlight implements Flight{
 
         return flightDetails;
     }
-
+    /**
+     * @return HashMap<String, String>: a hashmap of the flight details
+     */
     @Override
     public HashMap<String, String> getLongDetails() {
         HashMap<String, String> flightDetails = this.getShortDetails();
@@ -58,17 +60,23 @@ public class RealTimeFlight implements Flight{
 
         return flightDetails;
     }
-
+    /**
+     * @return Airport: the departure airport
+     */
     @Override
     public Airport getDepAirport() {
         return this.depAirport;
     }
-
+    /**
+     * @return Airport: the arrival airport
+     */
     @Override
     public Airport getArrAirport() {
         return this.arrAirport;
     }
-
+    /**
+     * @return LocalDate: the date of the flight
+     */
     @Override
     public void updateFlightInfo(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
         this.date = date;
@@ -80,7 +88,9 @@ public class RealTimeFlight implements Flight{
         this.isGround = isGround;
         this.direction = direction;
     }
-
+    /**
+     * @return String: the string representation of the flight
+     */
     @Override
     public String toString() {
         return "Flight: " + this.depAirport.getId() + " to " + this.arrAirport.getId() + " on " + this.date.toString();
