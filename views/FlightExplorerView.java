@@ -215,7 +215,7 @@ public class FlightExplorerView {
         responseBody.put("flight_status", "active");
 
         RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
-        String search = realTimeFlightAPI.search(responseBody); // #TODO
+        String search = realTimeFlightAPI.search(responseBody);
 
         return this.explorer.getRealTimeFlights(responseBody);
     }
@@ -315,7 +315,6 @@ public class FlightExplorerView {
      */
     private void removeFromDashboard (String pinButton){
 
-//        pinned.getChildren().remove(pinButton);
         pinned.getChildren().removeIf(node -> {
             if (node instanceof Button) {
             Button button = (Button) node;
@@ -328,7 +327,7 @@ public class FlightExplorerView {
 
     /**
      * this removes the button from the dashboard
-     * @param  flightNumber
+     * @param  flightNumber the flight number of the flight to be added
      * @return void
      */
     private void showInfoWindowUnpinned(int flightNumber, ArrayList<Flight> flightList) {
@@ -428,7 +427,7 @@ public class FlightExplorerView {
 
     /**
      * Adds a flight that was pinned to the dashboard and updates the hashmap
-     * @param flightNumber
+     * @param flightNumber the flight number of the flight to be added
      * @return void
      *
      */
@@ -449,7 +448,7 @@ public class FlightExplorerView {
     /**
      *
      * Searches and filters the resulting flights and then updating those results on the dashboard and map
-     * @param  searchField
+     * @param  searchField the text field to search by
      * @return void
      *
      */
@@ -497,11 +496,11 @@ public class FlightExplorerView {
         }
         else{
             this.contentBox.getChildren().clear();
-            for (int i = 0; i < searchResult.size(); i++) { // add labels for flight. #TODO
+            for (int i = 0; i < searchResult.size(); i++) {
                 Button addFlight = new Button(searchResult.get(i).toString());
                 int finalI = i;
                 addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, searchResult));
-                this.contentBox.getChildren().add(addFlight); // #TODO
+                this.contentBox.getChildren().add(addFlight);
             }
 
             ConvertToJSON converting = new ConvertToJSON(searchResult);
@@ -524,11 +523,11 @@ public class FlightExplorerView {
      */
     private void createContentBox() {
         this.contentBox.setSpacing(15);
-        for (int i = 0; i < this.flightList.size(); i++) { // add labels for flight. #TODO
+        for (int i = 0; i < this.flightList.size(); i++) {
             Button addFlight = new Button(this.flightList.get(i).toString());
             int finalI = i;
             addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, this.flightList));
-            this.contentBox.getChildren().add(addFlight); // #TODO
+            this.contentBox.getChildren().add(addFlight);
         }
     }
 

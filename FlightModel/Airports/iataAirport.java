@@ -20,17 +20,23 @@ public class iataAirport implements Airport{
         this.country = country;
         this.location = new Location(lat, lon);
     }
-
+    /**
+     * @return String: the airport name
+     */
     @Override
     public String getDetails() {
         return this.name + ", " + this.country;
     }
-
+    /**
+     * @return String: the airport id
+     */
     @Override
     public String getId() {
         return this.iata;
     }
-
+    /**
+     * @return Location: the airport location
+     */
     @Override
     public Location getLocation() {
         return location;

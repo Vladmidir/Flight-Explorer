@@ -12,6 +12,7 @@ import java.util.Properties;
 public class ConfigReader {
 
     /**
+     * @return void
      * This method reads the config file and sets the values as system properties
      */
     public void getPropValues() throws IOException {

@@ -36,8 +36,8 @@ public class FlightExplorer {
 
     /***
     * get the airport details from the local data file
-    * build an airport object
-    * return the airport object
+    * @param iata: build an airport object
+    * @return Airport: return the airport object
     */
     private Airport buildAirport(String iata) {
           return airportsEndpoint.getAirportByIata(iata);
@@ -114,7 +114,7 @@ public class FlightExplorer {
 
     /**
     * Update the flight information about a specific flight
-    * Use flight IATA and Flight number to identify the flight
+    * @return void: Use flight IATA and Flight number to identify the flight
      */
     public void updateFlightInfo(Flight flight) {
         return;

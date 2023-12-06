@@ -42,7 +42,7 @@ public class SearchFlights {
      *
      * @param  params the parameter to search by
      * @param  value search term
-     * @return an array list of flights
+     * @return ArrayList<Flight>: an array list of flights
      */
     public ArrayList<Flight> search (String params, String value) {
         this.searchResult = new ArrayList<Flight>();
@@ -103,7 +103,7 @@ public class SearchFlights {
     /**
      * getter for search result
      *
-     * @return an arraylist of flights
+     * @return ArrayList<Flight>: an arraylist of flights
      */
     public ArrayList<Flight> getSearchResult() {
         return this.searchResult;
@@ -113,7 +113,7 @@ public class SearchFlights {
     /**
      * getter for search result
      *
-     * @return an arraylist of flights
+     * @return String: an arraylist of flights
      */
     public String getFlightListJSON() {
 
@@ -125,7 +125,7 @@ public class SearchFlights {
     /**
      * getter for all flights
      *
-     * @return an arraylist of all flights
+     * @return ArrayList<Flight>: an arraylist of all flights
      */
     public ArrayList<Flight> getFlightList() {
         return this.flightList;

@@ -41,7 +41,12 @@ public class RealTimeFlightAPI implements FlightAPIEndPoint{
                     "offset");
         }
 
-        @Override
+    /**
+     *
+     * @param params - the parameters to be added to the url
+     * @return String: the response body from the api
+     */
+    @Override
         public String search(HashMap<String, String> params) {
             HashMap<String, String> validParams = new HashMap<>();
             //check if params are valid

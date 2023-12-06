@@ -25,7 +25,9 @@ public class HistoricFlight implements Flight{
         this.depAirport = depAirport;
         this.arrAirport = arrAirport;
     }
-
+    /**
+     * @return HashMap<String, String>: a hashmap of the flight details
+     */
     @Override
     public HashMap<String, String> getShortDetails() {
         HashMap<String, String> flightDetails = new HashMap<String, String>();
@@ -37,22 +39,30 @@ public class HistoricFlight implements Flight{
 
         return flightDetails;
     }
-
+    /**
+     * @return HashMap<String, String>: a hashmap of the flight details
+     */
     @Override
     public HashMap<String, String> getLongDetails() {
         return this.getShortDetails();
     }
-
+    /**
+     * @return String: the flight name
+     */
     @Override
     public Airport getDepAirport() {
         return this.depAirport;
     }
-
+    /**
+     * @return String: the flight name
+     */
     @Override
     public Airport getArrAirport() {
         return this.arrAirport;
     }
-
+    /**
+     * @return String: the flight name
+     */
     @Override
     public void updateFlightInfo(LocalDate date, String status, Airport depAirport, Airport arrAirport, Location location, double altitude, boolean isGround, double direction) {
         this.date = date;
