@@ -1,27 +1,18 @@
 package views;
 
-
 import FlightModel.Airports.Airport;
 import FlightModel.Flights.Flight;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 
 /**
  * Class ConvertToJSON.
  * This class converts the flight list to JSON format.
  */
 public class ConvertToJSON {
-
-
     private String flightListJSON = "";
     private ArrayList<Flight> flightList;
-
-        public HashMap<Integer, HashMap<String, String>> flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
-
-
-
+    public HashMap<Integer, HashMap<String, String>> flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
 
     /**
      * Constructor
@@ -52,7 +43,7 @@ public class ConvertToJSON {
             flightInfo.put("flightDetail", flightList.get(i).toString().substring(8));
 
 
-            temp += i+":{";
+            temp += "\"" + i + "\"" +":{";
             temp += "\"arrAirportId\":" + "\""+arrAirport.getId()+"\",";
             temp += "\"arrAirportDetail\":";
             temp += "\""+arrAirport.getDetails()+"\",";
@@ -119,8 +110,6 @@ public class ConvertToJSON {
             flightInfo.put("isGround",flightList.get(i).getLongDetails().get("isGround"));
             flightInfo.put("direction",flightList.get(i).getLongDetails().get("direction"));
 
-
-
             flightInfo.put("flightDetail", flightList.get(i).toString().substring(8));
             flightInfo.put("arrAirportDetail", arrAirport.getDetails());
             flightInfo.put("arrAirportId", arrAirport.getId());
@@ -130,10 +119,7 @@ public class ConvertToJSON {
             flightInfo.put("depAirportLocation", depAirport.getLocation().toString());
             flightDetails.put(i, flightInfo);
         }
-
         this.flightsHashMap = flightDetails;
-
-
     }
 
     /**
@@ -144,7 +130,4 @@ public class ConvertToJSON {
     public HashMap<Integer, HashMap<String, String>> getHashMap() {
         return this.flightsHashMap;
     }
-
-
-
 }

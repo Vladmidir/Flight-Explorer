@@ -1,57 +1,31 @@
 package views;
-import FlightModel.APIs.WebAPIs.RealTimeFlightAPI;
 import FlightModel.FlightExplorer;
 import FlightModel.*;
 import FlightModel.Airports.*;
 import FlightModel.Flights.Flight;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.scene.layout.*;
-import javafx.scene.input.KeyEvent; //you will need these!
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import javafx.event.EventHandler; //you will need this too!
-import javafx.scene.AccessibleRole;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.io.*;
-
-import FlightModel.FlightExplorer;
 
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
-import javax.swing.text.Style;
-import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
-
-import views.Bridge;
 
 
 /**
@@ -61,35 +35,23 @@ import views.Bridge;
 public class FlightExplorerView {
     FlightExplorer explorer;
     Stage stage;
-
     Scene scene;
-
     WebView webView = new WebView();
-
     VBox contentBox= new VBox();
-
     WebEngine webEngine = this.webView.getEngine();
-
     ComboBox<String> comboBox = new ComboBox<>();
-
     Button searchButton = new Button("Search");
-
     ScrollPane scrollPane;
-
     ScrollPane pinnedPane;
     VBox pinned = new VBox();
-
     ArrayList<Flight> flightList;
-
     String mapFlightListToString;
-
     static HashMap<Integer, Boolean> isPinned = new HashMap<>();
-
 
     /**
      * constructor for view, this is mainly javafx
      */
-    public FlightExplorerView(FlightExplorer explorer, Stage stage) { // contructor for view, this is mainly javafx
+    public FlightExplorerView(FlightExplorer explorer, Stage stage) {
         this.explorer = explorer;
         this.stage = stage;
 
@@ -172,7 +134,6 @@ public class FlightExplorerView {
         this.pinnedPane.setPrefViewportWidth(500);
         this.pinnedPane.setMaxWidth(500);
 
-
         //set styles for the flight and dashboard titles
         Label flightTitle = new Label("Flights");
         Label dashboardTitle = new Label("Dashboard");
@@ -195,7 +156,6 @@ public class FlightExplorerView {
         this.scene = new Scene(titleSearchHold, 1440, 1000);
         this.stage.setScene(this.scene);
         this.stage.show();
-
     }
 
     /**
@@ -211,13 +171,10 @@ public class FlightExplorerView {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HashMap<String, String> responseBody = new HashMap<>();
-        responseBody.put("flight_status", "active");
+        HashMap<String, String> params = new HashMap<>();
+        //params.put("flight_status", "active");
 
-        RealTimeFlightAPI realTimeFlightAPI = new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY"));
-        String search = realTimeFlightAPI.search(responseBody);
-
-        return this.explorer.getRealTimeFlights(responseBody);
+        return this.explorer.getRealTimeFlights(params);
     }
 
     /**
@@ -228,14 +185,9 @@ public class FlightExplorerView {
      * @return void
      */
     private void showInfoWindowPinned(int flightNumber) {
-
-
-
         // Create a new stage (window)
         Stage infoStage = new Stage();
         infoStage.setTitle("Info Window");
-
-
         // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
         infoStage.initModality(Modality.APPLICATION_MODAL);
 
@@ -274,7 +226,6 @@ public class FlightExplorerView {
             else if (key.equals("status")){
                 info += "Status: " + flightInfo.get(key) + "\n";
             }
-
         }
 
         Button pinButton = new Button("Unpin this flight");
@@ -282,7 +233,6 @@ public class FlightExplorerView {
         Font customFont = new Font("Arial", 24);
         infoLabel.setFont(customFont);
         pinButton.setStyle("-fx-font-size: 24px;");
-
 
         infoLayout.getChildren().add(infoLabel);
 
@@ -294,16 +244,10 @@ public class FlightExplorerView {
             infoStage.close();
 
         });
-
-
         VBox hold = new VBox(infoLabel, pinCenter);
-
-
-
         // Set the layout for the scene
         Scene infoScene = new Scene(hold, 1200, 800);
         infoStage.setScene(infoScene);
-
         // Show the info window
         infoStage.show();
     }
@@ -314,16 +258,14 @@ public class FlightExplorerView {
      * @return void
      */
     private void removeFromDashboard (String pinButton){
-
         pinned.getChildren().removeIf(node -> {
             if (node instanceof Button) {
-            Button button = (Button) node;
-            return pinButton.equals(button.getText());
-        }
-        return false;
-    });
+                Button button = (Button) node;
+                return pinButton.equals(button.getText());
+            }
+            return false;
+        });
     }
-
 
     /**
      * this removes the button from the dashboard
@@ -331,13 +273,8 @@ public class FlightExplorerView {
      * @return void
      */
     private void showInfoWindowUnpinned(int flightNumber, ArrayList<Flight> flightList) {
-
-
-
-
         Stage infoStage = new Stage();
         infoStage.setTitle("Info Window");
-
 
         // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
         infoStage.initModality(Modality.APPLICATION_MODAL);
@@ -377,16 +314,11 @@ public class FlightExplorerView {
             else if (key.equals("status")){
                 info += "Status: " + flightInfo.get(key) + "\n";
             }
-
-
         }
-
 
         Label infoLabel = new javafx.scene.control.Label(info);
         Font customFont = new Font("Arial", 24);
         infoLabel.setFont(customFont);
-
-
 
         infoLayout.getChildren().add(infoLabel);
         Button pinButton = new Button("Pin this flight");
@@ -396,7 +328,6 @@ public class FlightExplorerView {
         pinButton.setOnAction(e -> {
             addToDashboard(flightNumber);
             infoStage.close();
-
         });
         VBox hold = new VBox(infoLabel);
         if (!isPinned.get(flightNumber)){
@@ -409,18 +340,9 @@ public class FlightExplorerView {
             temp.setAlignment(Pos.CENTER);
             hold.getChildren().add(temp);
         }
-
-
-
-
-
-
-
-
         // Set the layout for the scene
         Scene infoScene = new Scene(hold, 1200, 800);
         infoStage.setScene(infoScene);
-
         // Show the info window
         infoStage.show();
     }
@@ -434,15 +356,9 @@ public class FlightExplorerView {
     private void addToDashboard(int flightNumber){
         // add to dashboard
         Button pinnedFlight = new Button(this.flightList.get(flightNumber).toString());
-
-
         pinnedFlight.setOnAction(e -> showInfoWindowPinned(flightNumber));
         this.pinned.getChildren().add(pinnedFlight);
         isPinned.put(Integer.valueOf(flightNumber), true);
-
-
-
-
     }
 
     /**
@@ -465,7 +381,6 @@ public class FlightExplorerView {
                 addFlight.setOnAction(e -> showInfoWindowUnpinned(finalI, this.flightList));
                 this.contentBox.getChildren().add(addFlight);
             }
-
             ConvertToJSON converting = new ConvertToJSON(this.flightList);
             String dict = converting.getFlightListJSON();
             createMap(dict);
@@ -473,8 +388,6 @@ public class FlightExplorerView {
         else if (search.isEmpty()){
             Stage infoStage = new Stage();
             infoStage.setTitle("Info Window");
-
-
             // Set modality to APPLICATION_MODAL to make it block user interaction with other windows
             infoStage.initModality(Modality.APPLICATION_MODAL);
 
@@ -484,8 +397,6 @@ public class FlightExplorerView {
             Label infoLabel = new javafx.scene.control.Label(info);
             Font customFont = new Font("Arial", 24);
             infoLabel.setFont(customFont);
-
-
 
             infoLayout.getChildren().add(infoLabel);
             Scene infoScene = new Scene(infoLayout, 700, 700);
@@ -509,12 +420,7 @@ public class FlightExplorerView {
                 dict = "{}";
             }
             createMap(dict);
-
         }
-
-
-
-
     }
 
     /**
@@ -556,14 +462,11 @@ public class FlightExplorerView {
                 "departure airport details",
                 "departure airport location",
                 "location of flight"
-
-
         );
         this.comboBox.setItems(items);
         this.comboBox.setValue("select an item");
         this.comboBox.setOnAction(e -> {
             String selectedValue = this.comboBox.getValue();
-
         });
         this.comboBox.setStyle("-fx-font-size: 26px;");
     }
@@ -578,22 +481,19 @@ public class FlightExplorerView {
         try {
             // Load the HTML file into the WebView
             String basePath = System.getProperty("user.dir");
-            String finalPath = basePath + "/views/html/map.html";
+            String finalPath = basePath + "/views/html/FlightMap.html";
             File htmlFile = new File(finalPath);
             URI uri = htmlFile.toURI();
             this.webEngine.load(uri.toURL().toString());
             this.webEngine.setJavaScriptEnabled(true);
-
             // Add a listener to wait for the page to finish loading
             this.webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == Worker.State.SUCCEEDED) {
-                    this.webEngine.executeScript("createFlights(" + dict + "  );");
-
-
+                    //TODO: Fix error here
+                    this.webEngine.executeScript("createFlights(" + dict + ");");
                 } else if (newValue == Worker.State.FAILED) {
                     System.err.println( this.webEngine.getLoadWorker().getMessage());
                 } });
-
             this.webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
                 @Override
                 public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
@@ -602,10 +502,8 @@ public class FlightExplorerView {
                     webEngine.executeScript("console.log = function(message) { java.log(message); }");
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

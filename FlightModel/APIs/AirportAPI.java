@@ -1,4 +1,4 @@
-package FlightModel.APIs.LocalData;
+package FlightModel.APIs;
 
 import FlightModel.Airports.iataAirport;
 

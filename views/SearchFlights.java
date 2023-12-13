@@ -5,20 +5,16 @@ import FlightModel.Flights.Flight;
 import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 /**
  * Class SearchFlights.
  * This class searches and filters the flight list.
  */
 public class SearchFlights {
-
     private HashMap<Integer, HashMap<String, String>> flightsHashMap;
-
     private String flightListJSON;
-
     private ArrayList<Flight> flightList;
-
     private ArrayList<Flight> searchResult;
-
 
     /**
      * Constructor
@@ -26,15 +22,10 @@ public class SearchFlights {
      * @param  flightList List of all flights
      */
     public SearchFlights(ArrayList<Flight> flightList) {
-
-
         this.flightList = flightList;
         this.flightsHashMap = new HashMap<Integer, HashMap<String, String>>();
         this.searchResult = flightList;
         this.flightListJSON = this.getFlightListJSON();
-
-
-
     }
 
     /**
@@ -68,25 +59,15 @@ public class SearchFlights {
 
         params = syn.get(params);
 
-
-
-
-
-
         for (int i = 0; i < flightsHashMap.size(); i++ ) {
 
             if (flightsHashMap.get(i).get(params) != null) {
                 if (flightsHashMap.get(i).get(params).equals(value)) {
                     this.searchResult.add(this.flightList.get(i));
                 }
-
             }
-
-
         }
         return this.searchResult;
-
-
     }
 
     /**
@@ -99,7 +80,6 @@ public class SearchFlights {
         return convertToJSON.getFlightListJSON();
     }
 
-
     /**
      * getter for search result
      *
@@ -109,18 +89,14 @@ public class SearchFlights {
         return this.searchResult;
     }
 
-
     /**
      * getter for search result
      *
      * @return String: an arraylist of flights
      */
     public String getFlightListJSON() {
-
         return new ConvertToJSON(this.flightList).getFlightListJSON();
     }
-
-
 
     /**
      * getter for all flights
@@ -130,10 +106,4 @@ public class SearchFlights {
     public ArrayList<Flight> getFlightList() {
         return this.flightList;
     }
-
-
-
-
-
-
 }

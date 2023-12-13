@@ -1,6 +1,6 @@
 package tests;
 //import java test libraries
-import FlightModel.APIs.LocalData.AirportAPI;
+import FlightModel.APIs.AirportAPI;
 import FlightModel.APIs.WebAPIs.*;
 import FlightModel.FlightExplorer;
 import FlightModel.Flights.Flight;

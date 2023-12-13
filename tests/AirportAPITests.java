@@ -1,6 +1,6 @@
 package tests;
 
-import FlightModel.APIs.LocalData.AirportAPI;
+import FlightModel.APIs.AirportAPI;
 import FlightModel.Airports.iataAirport;
 import org.junit.Before;
 import org.junit.Test;

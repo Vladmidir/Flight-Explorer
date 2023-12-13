@@ -2,11 +2,9 @@ import FlightModel.FlightExplorer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import views.FlightExplorerView;
-import FlightModel.APIs.LocalData.AirportAPI;
+import FlightModel.APIs.AirportAPI;
 import FlightModel.APIs.WebAPIs.RealTimeFlightAPI;
 import FlightModel.ConfigReader;
-
-import java.io.IOException;
 
 /**
  * Class FlightExplorerApp.

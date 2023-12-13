@@ -3,13 +3,11 @@ package FlightModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import FlightModel.APIs.LocalData.AirportAPI;
+import FlightModel.APIs.AirportAPI;
 import FlightModel.APIs.WebAPIs.FlightAPIEndPoint;
 import FlightModel.Airports.Airport;
 import FlightModel.Airports.Location;
-import FlightModel.Airports.iataAirport;
 import FlightModel.Flights.Flight;
 import FlightModel.Flights.RealTimeFlight;
 import org.json.JSONArray;
@@ -151,31 +149,37 @@ public class FlightExplorer {
         //parse the json response
         JSONObject obj = new JSONObject(response);
         JSONArray data = obj.getJSONArray("data");
-        for (int i = 0; i < data.length(); i++) {
-            HashMap<String, String> flightDetails = new HashMap<>();
-            JSONObject flight = data.getJSONObject(i);
-            //get the flight details
-            flightDetails.put("flight_date", flight.getString("flight_date"));
-            flightDetails.put("flight_status", flight.getString("flight_status"));
 
-            JSONObject depObj = flight.getJSONObject("departure");
-            JSONObject arrObj = flight.getJSONObject("arrival");
-            flightDetails.put("dep_iata", depObj.getString("iata")) ;
-            flightDetails.put("arr_iata", arrObj.getString("iata")) ;
-            //Set up the location
-            Location location;
-            //check if live location is available
-            //if not - set the location to departure airport location
-            //if live location is available - set the location to the live location
-            if (!flight.isNull("live")) {
-                flightDetails.put("live", flight.getJSONObject("live").toString());
+        for (int i = 0; i < data.length(); i++) {
+            try {
+                HashMap<String, String> flightDetails = new HashMap<>();
+                JSONObject flight = data.getJSONObject(i);
+                //get the flight details
+                flightDetails.put("flight_date", flight.getString("flight_date"));
+                flightDetails.put("flight_status", flight.getString("flight_status"));
+
+                JSONObject depObj = flight.getJSONObject("departure");
+                JSONObject arrObj = flight.getJSONObject("arrival");
+                flightDetails.put("dep_iata", depObj.getString("iata")) ;
+                flightDetails.put("arr_iata", arrObj.getString("iata")) ;
+                //Set up the location
+                Location location;
+                //check if live location is available
+                //if not - set the location to departure airport location
+                //if live location is available - set the location to the live location
+                if (!flight.isNull("live")) {
+                    flightDetails.put("live", flight.getJSONObject("live").toString());
+                }
+                //build the flight object
+                Flight f = buildFlight("realtime", flightDetails);
+                //add the flight to the list
+                if (f != null){
+                    flights.add(f);
+                }
+            } catch (Exception e) {
+                System.out.println("Error parsing flight: " + data.getJSONObject(i).toString());
             }
-            //build the flight object
-            Flight f = buildFlight("realtime", flightDetails);
-            //add the flight to the list
-            if (f != null){
-                flights.add(f);
-            }
+
         }
         return flights;
     }
