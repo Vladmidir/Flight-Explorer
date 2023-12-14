@@ -1,4 +1,7 @@
 import FlightModel.FlightExplorer;
+import FlightModel.Injectors.AviationStackInjector;
+import FlightModel.Injectors.FlightAPIInjector;
+import FlightModel.Injectors.MockFlightAPIInjector;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import views.FlightExplorerView;
@@ -7,6 +10,7 @@ import FlightModel.APIs.WebAPIs.RealTimeFlightAPI;
 import FlightModel.ConfigReader;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Class FlightExplorerApp.
@@ -17,9 +21,7 @@ public class FlightExplorerApp extends Application {
     FlightExplorerView view;
 
     public static void main(String[] args) {
-
         launch(args);
-
     }
 
     /*
@@ -29,15 +31,13 @@ public class FlightExplorerApp extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        //config reader
-        ConfigReader configReader = new ConfigReader();
+        FlightAPIInjector injector = new MockFlightAPIInjector(Paths.get("./FlightModel/dataFiles/mockFlightData.json"));
+//        FlightAPIInjector injector = new AviationStackInjector();
         try {
-            configReader.getPropValues();
+            this.model = injector.buildFlightExplorer();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        AirportAPI airportAPI = new AirportAPI();
-        this.model = new FlightExplorer(new RealTimeFlightAPI(System.getProperty("AVIATIONSTACK_KEY")), null, airportAPI);
         this.view = new FlightExplorerView(model, primaryStage);
     }
 

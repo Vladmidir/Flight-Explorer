@@ -5,9 +5,9 @@ import java.util.HashMap;
 public interface FlightAPIEndPoint {
 
     /**
-    * Send a request to the AviationStack API
-    * @param params - the parameters to be added to the url
-    * @return the response body from the api
+    * Query the Flight API for data based on the parameters
+    * @param params - the parameters to be added to the query
+    * @return the raw response body from the api
      */
     public String search(HashMap<String, String> params);
 
