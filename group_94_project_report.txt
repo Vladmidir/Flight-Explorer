@@ -1,0 +1,148 @@
+Phase 2 Marking Scheme
+
+Team Name: group_94
+
+PROJECT DEMO (worth 30%)
+
+One feature per person presented and are innovative, clear, stable, address accessibility concerns (12 marks)
+
+One design choice per team member is clearly explained (10 marks)
+
+Distribution of work across teammates is clear and fair (4 marks)
+
+All teammates contribute to demo (4 marks)
+
+Features: 10/12
+Designs: 10/10
+Distribution: 4/4
+Contributions 4/4
+
+>>> TOTAL: 28/30
+
+COMMENTS ON DEMO: 
+
+
+Creative, engaging idea to make a "flight tracker"; used 2 APIs, attempted many nice features. Added line thickness and different color combinations. Explored mediator and then factory patterns, used JSON to communicate with APIs.  Equal contribution from all members and all members present during presentation and equally involved. Could do more work on the UI as is rather complicated; how to use the application is not very clear.  Of note, wireframing is a technique that can help flesh out UI issues prior to implementation (which was not covered in this class).  As it stands, complexity limits accessibility but the effort and learning here is apparent.
+
+**Thank you for the Live Demo!**
+
+PROCESS MARKS (40%)
+
+User stories identified (IDs correspond to design document) and branches in GitLab repository can be easily related to user stories  (4 marks)
+
+Retrospective notes indicate process refined/improved;  GitFlow process is stable by final iteration (4 marks)
+    -1: I would have liked to see concrete measures you took to ensure that no
+        one is confused about what their next assignment should be (e.g.,
+        setting up a google doc at the start of each sprint detailing the task
+        assignments for the entire sprint, as well as having members communicate
+        if they finished their tasks early)
+    -0.5: seems like branch `1.4/1.2ViewFeatures` was reused for Story 3.4
+
+User stories initiated early and there is evidence of incremental commits with intuitive commit messages  (8 marks)
+    -1: quite a few generic commit messages (e.g., DEV-1.2, DEV-1.3 commits)
+    -0.5: large commits
+        * https://mcsscm.utm.utoronto.ca/csc207_20239/group_94/-/commit/d37c48050796ceb19108da8fb226f6ba82de7d05
+
+    Feedback:
+        Each commit should represent one logical change. For example, say your user story is about implementing
+        a page with three buttons. You could have 4 commits: 1 for implementing each button + 1 final one to
+        tie them all together in some kind of `PageView` class.
+
+        Commits shouldn't be too big as it makes it hard to track changes that happen to a code base when looking
+        at its commit history. However, they shouldn't be too small that it would make the history unnecessarily
+        long. Good commit practices (e.g., reasonable sizes + nice commit messages) helps to manage a code base
+        in the long run. Benefits: quickly point out which commits introduce a bug and easily revert them, point
+        out why someone implemented some piece of code some X years ago by looking at the commit message, and more!
+
+Merge requests/code reviews exist at each iteration (8 marks)
+    + All members did at least one code review
+
+Incremental commits include tests (8 marks)
+    + reasonable effort was made to write test cases
+
+Incremental commits include documentation (JavaDoc)  (8 marks)
+    -1: documentation efforts are mostly consistent with JavaDoc, save a few
+        cases
+
+User Stories: 4/4
+Retrospectives/Process Improvement: 2.5/4
+Incremental, Clear Commits: 8/8
+Merge Requests: 8/8
+Tests: 8/8
+Documentation: 7/8
+
+>>> TOTAL: 37.5/40
+
+FINAL REPORT + DESIGN DOCUMENT REVISION (20%)
+
+Goals and Stories selected for each sprint are clear in Final Report (4 marks)
+
+Retrospectives are clear and meaningful in Final Report (2 marks)
+
+Code Reviews (Merge Requests) are accessible in Final Report (2 marks)
+
+Process is summarized well in final report (4 marks)
+    -0.5: team capacity assessments needs improvement
+        * this section should be about by when you think certain milestones will
+          be done, as well as if you expect any external factors to affect your
+          team capacity (e.g., unexpected git issues, issues with dependencies
+          between stories
+
+UML/Design Patterns reflect what was completed (8 marks)
+    -1 (mediator):
+        * UML had public `FlightExplorerView.webEngine` while code had no public
+          access modifier for this attribute
+        * Similarly for `FlightExplorerView.mapFlightList`,
+          `FlightExplorerView.createMap(String dict)`, and other methods
+    -1.5 (composite):
+        * a lot of classes in the UML don't have a corresponding implementation
+          in the code (e.g., Scrolls`, `titleSearch`, `searchButtonBox`)
+    + MVC OK (the feedback about how to properly use UML applies to your
+      `HTML & CSS & JS` UML element)
+    -1.5 (factory):
+        * `FlightExplorer.getFlightAirports` in UML but not in code
+        * `FlightExplorer.buildFlight(parameters: HashMap<String, String>)` in
+          UML but `buildFlight(String flightType, HashMap<String, String> details)`
+          in code
+        * Multiple discrepancies in method return type and parameters between
+          UML and code for `Flight`
+        * `RealTimeFlight.longitude` doesn't exist in code
+
+    Feedback:
+    * Recall that "+" means public in UML conventions.
+    * I noticed that in the composite UML, there are a number of classes that
+      sound like JavaFX classes (e.g., `Scene` but with `titleSearchHold`). If
+      you had wanted to represent an instance of `Scene` (from javaFX) with a
+      `titleSearchHold` `HBox`, this is not the proper way to do so. UMLs are a
+      representation of how different classes interact with each other. So, you
+      would have implemented (in your own class) a JavaFX `Scene` that has an
+      `HBox` child, which is stored in an attribute `titleSearchHold`). These
+      new class is what you should put in the UML.
+
+Goals/Stories: 4/4
+Retrospectives: 2/2
+Code Reviews: 2/2
+Process Documentation: 3.5/4
+UML/Design Patterns: 4/8
+
+>>> TOTAL: 15.5/20
+
+WRITING QUALITY OF FINAL REPORT/DESIGN DOCUMENT (10%)
+
+Structure (4 marks): Organization of final report + design document is logical and clear.
+
+Mechanics (3 marks):  Sentences must be complete, grammatically correct, and well written.
+    -1: quite a number of incomplete sentences in task assignments
+
+Appropriateness for the Audience (3 marks): Writing must be appropriate for consumption by a technical audience.
+
+Structure: 4/4
+Mechanics: 2/3
+Appropriateness: 3/3
+
+>>> TOTAL: 9/10
+
+>>> TOTAL MARK FOR PHASE 2: 90/100
+
+NOTE THAT SOME MARK ADJUSTMENTS MAY HAVE BEEN MADE ON AN INDIVIDUAL BASIS, BASED ON THE RELATIVE CONTRIBUTIONS OF INDIVIDUAL MEMBERS OF YOUR TEAM.  THE MARK ABOVE IS FOR YOUR GROUP; FINAL MARKS (PER PERSON) WILL BE POSTED TO MARKUS .... ONCE MARKUS IS BACK ONLINE.
+
